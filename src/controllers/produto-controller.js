@@ -15,6 +15,15 @@ const getProduct = ('/', (request, response) => {
     })    
 });
 
+const getProductById = ('/', (request, response) => {
+    productManager.getProductById(parseInt(request.params.pid)).then(res => {
+        response.send(res);
+    }).catch(erro => {
+        response.send("errro: ", erro);
+    })
+});
+
 module.exports = {
-    getProduct
+    getProduct,
+    getProductById
 }
