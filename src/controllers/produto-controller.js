@@ -1,7 +1,12 @@
 const produtos = [{id: 1, nome: "Teste"}];
+const ProductManager = require('../services/product-manager');
+const produtoManager = new ProductManager();
 
 const getProdutos = ('/', (req, res) => {
-    res.send(produtos);
+    produtoManager.getProduct().then(dados => {
+        res.send(dados);
+    })
+    
 });
 ;
 module.exports = {

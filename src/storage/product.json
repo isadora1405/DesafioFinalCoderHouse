@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Arroz",
+    "description": "Pacote com um quilo.",
+    "price": 6.99,
+    "thumbnail": "caminho da imagem",
+    "code": 11,
+    "stock": 100
+  },
+  {
+    "id": 2,
+    "title": "Feijao",
+    "description": "Pacote com um quilo.",
+    "price": 7.99,
+    "thumbnail": "caminho da imagem",
+    "code": 12,
+    "stock": 100
+  },
+  {
+    "id": 3,
+    "title": "Sal",
+    "description": "Pacote com um quilo.",
+    "price": 0.99,
+    "thumbnail": "caminho da imagem",
+    "code": 13,
+    "stock": 100
+  }
+]
