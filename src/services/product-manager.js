@@ -3,11 +3,12 @@ const fs = require('fs').promises;
 
 class ProductManager {
     #path;
+    #messageErro;
 
     constructor() {
         const __dirname = path.resolve(); // Obtém o diretório atual
         this.#path = path.join(__dirname, 'src', 'storage', 'product.json'); 
-        console.log("caminho", this.#path)
+        this.#messageErro = "";
     }
 
     async addProduct(product) {
@@ -20,8 +21,9 @@ class ProductManager {
                     products = await this.getProduct();
                     if (!product.id) {
                         product.id = await this.nextId();
+                        product = this.status(product);
                     }
-                    products.push(product.objectProduct);
+                    products.push(product);
                     await this.#salvarProduct(products);
                 }catch(error){
                     console.log(error);
@@ -33,17 +35,34 @@ class ProductManager {
                 products.push(product.objectProduct);
                 await this.#salvarProduct(products);
             }
+        } else {
+            throw new Error(this.#messageErro);
+        }   
+    }
+
+    status(product) {
+        if (!product.status) {
+            product.status = true;
         }
+
+        return product
     }
 
     async updateProduct(id, product) {
+        if (!id) {
+            throw new Error(`Para atualizar um produto deve ser enviado o id`);
+        }
+
         const prod = await this.getProductById(id);
 
         if (prod) {
             await this.deleteProduct(prod.id);
-            product.id = id;
-            await this.addProduct(product);
+            let update = {...prod, ...product}
+            update.id = id;
+            await this.addProduct(update);
             return;
+        } else {
+            throw new Error(`Produto com id ${id} não cadastrado.`);
         }
 
         console.log("Produto não cadastrado.")
@@ -141,48 +160,53 @@ class ProductManager {
     async productIsValid(product) {
         if (product) {
             if (!product.title || product.title.trim().length === 0) {
-                console.log("Campo título é obrigatório")
+                this.#messageErro = "Campo título é obrigatório";
                 return false;
             }
 
             if (!product.description || product.description.trim().length === 0) {
-                console.log("Campo descrição é obrigatório")
+                this.#messageErro = "Campo descrição é obrigatório";
+                return false;
+            }
+
+            if (!product.category || product.category.trim().length === 0) {
+                this.#messageErro = "Campo categoria é obrigatório";
                 return false;
             }
            
             if ((product.price ?? 'sem dados') === 'sem dados') {
-                console.log("Campo preço é obrigatório")
+                this.#messageErro = "Campo preço é obrigatório";
                 return false;
             } else if (product.price <= 0) {
-                console.log("Campo preço deve ser maior que zero.");
+                this.#messageErro = "Campo preço deve ser maior que zero.";
                 return false;
             }
 
             if (!product.thumbnail || product.thumbnail.trim().length === 0) {
-                console.log("Campo caminho da imagem é obrigatório")
+                this.#messageErro = "Campo caminho da imagem é obrigatório";
                 return false;
             }
             
             if ((product.code ?? 'sem dados') === 'sem dados') {
-                console.log("Campo código é obrigatório")
+                this.#messageErro = "Campo código é obrigatório";
                 return false;
             } else if (product.code < 0) {
-                console.log("Campo código deve ser maior que zero.");
+                this.#messageErro = "Campo código deve ser maior que zero.";
                 return false;
             } else if (await this.hasCode(product.code)) {
-                console.log("Código do produto já cadastrado.");
+                this.#messageErro = "Código do produto já cadastrado.";
                 return false;
             }
             
             if ((product.stock ?? 'sem dados') === 'sem dados') {
-                console.log("Campo estoque é obrigatório")
+                this.#messageErro = "Campo estoque é obrigatório";
                 return false;
             } else if (product.stock < 0) {
-                console.log("Campo estoque deve ser maior que zero.");
+                this.#messageErro = "Campo estoque deve ser maior que zero.";
                 return false;
             }
         } else {
-            console.log("nenhum produto foi enviado.");
+            this.#messageErro = "nenhum produto foi enviado.";
             return false;
         }
 
