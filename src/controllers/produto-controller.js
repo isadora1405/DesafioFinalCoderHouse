@@ -2,7 +2,7 @@ const produtos = [{id: 1, nome: "Teste"}];
 const ProductManager = require('../services/product-manager');
 const productManager = new ProductManager();
 
-const getProdutos = ('/', (request, response) => {
+const getProduct = ('/', (request, response) => {
     const limit = request.query.limit;
     productManager.getProduct().then(res => {
         if (limit && res.length && res.length > limit) {
@@ -10,11 +10,11 @@ const getProdutos = ('/', (request, response) => {
             return;
         }
             response.send(res);
-        }).catch(erro => {
-            response.send("errro: ", erro);
-        })    
+    }).catch(erro => {
+        response.send("errro: ", erro);
+    })    
 });
-;
+
 module.exports = {
-    getProdutos
+    getProduct
 }
