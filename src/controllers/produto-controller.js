@@ -45,10 +45,20 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const deleteProduct = async (req, res) => {
+    try {
+        await productManager.deleteProduct(parseFloat(req.params.pid));
+        res.send("Produto apagado com sucesso com sucesso.");
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
     getProduct,
     getProductById,
     addProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 }

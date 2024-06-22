@@ -64,13 +64,18 @@ class ProductManager {
         } else {
             throw new Error(`Produto com id ${id} não cadastrado.`);
         }
-
-        console.log("Produto não cadastrado.")
     }
 
     async deleteProduct(id) {
         const listProd = await this.getProduct();
+        const prodDelete = listProd.find( prod => prod.id === id);
+
+        if (!prodDelete) {
+            throw new Error(`Produto com id ${id} não cadastrado.`);
+        }
+
         const newListProd = listProd.filter(prod => prod.id !== id);
+
         this.#salvarProduct(newListProd);
     }
 
