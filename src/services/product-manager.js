@@ -6,7 +6,7 @@ class ProductManager {
     #messageErro;
 
     constructor() {
-        const __dirname = path.resolve(); // Obtém o diretório atual
+        const __dirname = path.resolve();
         this.#path = path.join(__dirname, 'src', 'storage', 'product.json'); 
         this.#messageErro = "";
     }

@@ -11,14 +11,25 @@
     "status": true
   },
   {
-    "title": "Feijãoss",
-    "description": "KG",
-    "code": 1,
-    "price": 10.99,
-    "category": "Leguminosas",
-    "thumbnail": "caminho da imagem",
-    "stock": 100,
+    "title": "Arroz",
+    "description": "Kg",
+    "code": "2",
+    "price": "40.00",
+    "category": "Leguminosa",
+    "thumbnail": "Caminho imagem",
+    "stock": "54",
     "id": 2,
+    "status": true
+  },
+  {
+    "title": "Macarrão",
+    "description": "Kg",
+    "code": "3",
+    "price": "5.00",
+    "category": "Massa",
+    "thumbnail": "Caminho imagem",
+    "stock": "86",
+    "id": 3,
     "status": true
   }
 ]

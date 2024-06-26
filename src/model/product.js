@@ -14,10 +14,8 @@ class Product {
         this.#thumbnail = thumbnail;
         this.#code = code;
         this.#stock = stock;
-       // this.#id=10;
     }
 
-    // Getters
     get id() {
         return this.#id;
     }
@@ -58,7 +56,6 @@ class Product {
         }
     }
 
-    // Setters
     set id(newId) {
         this.#id = newId;
     }

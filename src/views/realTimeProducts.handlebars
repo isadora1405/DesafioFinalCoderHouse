@@ -1,37 +1,34 @@
-<h1>Bem vindos lista de produtos</h1>
+<div id="productHeader">
+    <h1>Bem vindos lista de produtos</h1>
 
-<div>
-    <p id="messageLogs"></p>
+    <div>
+        <p id="productItem"></p>
+    </div>
+
+    <div>
+        <h2>Cadastro de produtos</h2>
+    </div>
 </div>
 
-<div>
-    <h2>Cadastro de produtos</h2>
-</div>
-
-<form id="productForm">
+<div id="contentWrapper">
+    <form id="productForm">
         <label for="title">Título:</label>
         <input type="text" id="title" name="title" required><br>
-        <br>
         <label for="description">Descrição:</label>
         <input type="text" id="description" name="description" required><br>
-        <br>
         <label for="code">Código:</label>
         <input type="number" id="code" name="code" required><br>
-        <br>
         <label for="price">Preço:</label>
         <input type="number" id="price" name="price" required><br>
-        <br>
         <label for="category">Caminho da imagem:</label>
         <input type="text" id="thumbnail" name="thumbnail" required><br>
-        <br>
         <label for="thumbnail">Categoria:</label>
         <input type="text" id="category" name="category" required><br>
-        <br>
         <label for="stock">Qtd Estoque:</label>
         <input type="number" id="stock" name="stock" required><br>
-        <br>
         <button type="submit">Adicionar Produto</button>
     </form>
+</div>
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>

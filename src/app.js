@@ -6,6 +6,7 @@ const routesView = require('./routes/view.router.js');
 const {Server} = require('socket.io');
 const ProductManager = require('../src/services/product-manager');
 const productManager = new ProductManager();
+const path = require('path')
 
 const app = express();
 app.use(express.json());
@@ -30,18 +31,18 @@ const initializeSocket = async () => {
 
         io.on('connection', socket => {
             console.log('New client connected');
-            socket.emit('messageLogs', messages);
+            socket.emit('productItem', messages);
 
             socket.on('message', data => {
                 messages.push(data);
-                io.emit('messageLogs', messages);
+                io.emit('productItem', messages);
             });
 
             socket.on('deleteProduct', async id => {
                 try {
-                    await productManager.deleteProduct(parseInt(id)); // Supondo que você tenha esse método no seu ProductManager
+                    await productManager.deleteProduct(parseInt(id));
                     messages = await productManager.getProduct();
-                    io.emit('messageLogs', messages);
+                    io.emit('productItem', messages);
                 } catch (error) {
                     console.error('Error deleting product:', error);
                 }
@@ -49,9 +50,9 @@ const initializeSocket = async () => {
 
             socket.on('newProduct', async product => {
                 try {
-                    await productManager.addProduct(product); // Adiciona o novo produto
+                    await productManager.addProduct(product);
                     messages = await productManager.getProduct();
-                    io.emit('messageLogs', messages);
+                    io.emit('productItem', messages);
                 } catch (error) {
                     console.error('Error adding product:', error);
                 }
@@ -66,8 +67,4 @@ initializeSocket();
 
 app.use('/api/products', produtoRouter);
 app.use('/api/carts', cartRouter)
-/*
-app.listen(8080, () => {
-    console.log("Servidor Ok.")
-});*/
 
