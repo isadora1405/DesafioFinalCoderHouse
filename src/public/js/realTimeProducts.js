@@ -73,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Produto com este código já existe!',
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 4000 
             });
             return;
         }
