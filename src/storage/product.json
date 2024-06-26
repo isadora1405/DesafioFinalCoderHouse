@@ -9,5 +9,16 @@
     "stock": 100,
     "id": 1,
     "status": true
+  },
+  {
+    "title": "Feijãoss",
+    "description": "KG",
+    "code": 1,
+    "price": 10.99,
+    "category": "Leguminosas",
+    "thumbnail": "caminho da imagem",
+    "stock": 100,
+    "id": 2,
+    "status": true
   }
 ]
