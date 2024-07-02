@@ -1,16 +1,5 @@
 [
   {
-    "title": "Feijãoss",
-    "description": "KG",
-    "code": 1,
-    "price": 10.99,
-    "category": "Leguminosas",
-    "thumbnail": "caminho da imagem",
-    "stock": 100,
-    "id": 1,
-    "status": true
-  },
-  {
     "title": "Arroz",
     "description": "Kg",
     "code": "2",
@@ -30,6 +19,28 @@
     "thumbnail": "Caminho imagem",
     "stock": "86",
     "id": 3,
+    "status": true
+  },
+  {
+    "title": "ads",
+    "description": "asd",
+    "code": "22",
+    "price": "123",
+    "category": "21",
+    "thumbnail": "12",
+    "stock": "11",
+    "id": 4,
+    "status": true
+  },
+  {
+    "title": "Feijão",
+    "description": "KG",
+    "code": 1,
+    "price": 10.99,
+    "category": "Leguminosas",
+    "thumbnail": "caminho da imagem",
+    "stock": 100,
+    "id": 1,
     "status": true
   }
 ]

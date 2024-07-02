@@ -29,7 +29,7 @@ const getProductById = async (request, response) => {
 const addProduct = async (req, res) => {
     try {
         await productManager.addProduct(req.body);
-        res.send("Dados salvos com sucesso");
+        res.status(201).json({"mensagem": "Dados salvo com sucesso!"});
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -38,8 +38,8 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        await productManager.updateProduct(req.body.id, req.body);
-        res.send("Produto atualizado com sucesso.");
+        await productManager.updateProduct(parseInt(req.params.pid), req.body);
+        res.status(200).json({"mensagem": "Produto atualizado com sucesso!"});;
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -48,7 +48,7 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         await productManager.deleteProduct(parseFloat(req.params.pid));
-        res.send("Produto apagado com sucesso com sucesso.");
+        res.status(204).json({"mensagem": "Produto apagado sucesso!"});;
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
