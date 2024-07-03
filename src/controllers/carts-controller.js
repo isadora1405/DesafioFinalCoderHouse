@@ -12,9 +12,8 @@ const addNewCart = async (req, res) => {
 
 const addNewProductToCart = async (req, res) => {
     const { cid, pid } = req.params;
-    const { quantity } = req.body;
     try {
-        await cartManager.addProductToCart(cid, pid, quantity);
+        await cartManager.addProductToCart(cid, pid);
         res.send("Dados salvos com sucesso");
     } catch (error) {
         res.status(400).json({ error: error.message });

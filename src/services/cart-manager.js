@@ -33,7 +33,7 @@ class CartManager {
     
     
 
-    async addProductToCart(cartId, productId, quantity) {
+    async addProductToCart(cartId, productId) {
         const carts = await this.getCarts();
         let cartIds = parseInt(cartId, 10)
 
@@ -49,9 +49,9 @@ class CartManager {
         const existingProduct = cart.products.find(p => p.productId === productId);
     
         if (existingProduct) {
-            existingProduct.quantity += quantity;
+            existingProduct.quantity += 1;
         } else {
-            cart.products.push({ productId, quantity });
+            cart.products.push({ productId, quantity: 1 });
         }
     
         await this.#saveCarts(carts);
