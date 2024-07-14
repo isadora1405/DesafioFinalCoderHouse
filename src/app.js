@@ -3,6 +3,7 @@ const produtoRouter = require('./routes/produto-router.js');
 const cartRouter = require('./routes/carts-router.js');
 const handlebars = require('express-handlebars');
 const routesView = require('./routes/view.router.js');
+const chatRouter = require('./routes/chat.router.js');
 const {Server} = require('socket.io');
 const ProductManager = require('../src/services/product-manager');
 const productManager = new ProductManager();
@@ -19,30 +20,39 @@ const io = new Server(httpServer);
 app.engine('handlebars', handlebars.engine());
 app.use('/', routesView);
 app.use('/realTimeProducts', routesView);
+
+//app.use('/chat', routerChat);
 app.use(express.static(__dirname+'/public'));
 app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
 
-let messages;
+let listaProdutos;
+let listaMensagens = [];
 
 const initializeSocket = async () => {
     try {
-        messages = await productManager.getProduct();
+        listaProdutos = await productManager.getProduct();
 
         io.on('connection', socket => {
             console.log('New client connected');
-            socket.emit('productItem', messages);
+            socket.emit('productItem', listaProdutos);
+            io.emit('historico-mensagens', listaMensagens);
+
+            socket.on('mensagem-chat', data => {
+                listaMensagens.push(data);
+                io.emit('historico-mensagens', listaMensagens);
+            });
 
             socket.on('message', data => {
-                messages.push(data);
-                io.emit('productItem', messages);
+                listaProdutos.push(data);
+                io.emit('productItem', listaProdutos);
             });
 
             socket.on('deleteProduct', async id => {
                 try {
                     await productManager.deleteProduct(parseInt(id));
-                    messages = await productManager.getProduct();
-                    io.emit('productItem', messages);
+                    listaProdutos = await productManager.getProduct();
+                    io.emit('productItem', listaProdutos);
                 } catch (error) {
                     console.error('Error deleting product:', error);
                 }
@@ -51,8 +61,8 @@ const initializeSocket = async () => {
             socket.on('newProduct', async product => {
                 try {
                     await productManager.addProduct(product);
-                    messages = await productManager.getProduct();
-                    io.emit('productItem', messages);
+                    listaProdutos = await productManager.getProduct();
+                    io.emit('productItem', listaProdutos);
                 } catch (error) {
                     console.error('Error adding product:', error);
                 }
@@ -66,5 +76,5 @@ const initializeSocket = async () => {
 initializeSocket();
 
 app.use('/api/products', produtoRouter);
-app.use('/api/carts', cartRouter)
-
+app.use('/api/carts', cartRouter);
+app.use('/chat', chatRouter );
