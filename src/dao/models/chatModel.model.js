@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
 
 const messagesSchema = new mongoose.Schema({
-  user: {
+  userEmail: {
     type: String,
     required: true,
     trim: true,
     match: /.+\@.+\..+/,
+  },
+  userName: {
+    type: String,
+    required: true,
+    trim: true,
   },
   message: {
     type: String,

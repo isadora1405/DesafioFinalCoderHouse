@@ -1,10 +1,10 @@
-const sendMessage = async (user, message) => {
+const sendMessage = async (userEmail, message, userName) => {
   const response = await fetch("/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ user, message }),
+    body: JSON.stringify({ userEmail, message, userName }),
   });
 
   const data = await response.json();
@@ -31,8 +31,8 @@ Swal.fire({
   chatBox.addEventListener("keyup", async (evt) => {
     if (evt.key === "Enter") {
       if (chatBox.value.trim().length > 0) {
-        const data = { user: user, message: chatBox.value, name: userName };
-        await sendMessage(user, chatBox.value);
+        const data = { user: user, message: chatBox.value, userNameame: userName };
+        await sendMessage(user, chatBox.value, userName);
         socket.emit("mensagem-chat", data);
         chatBox.value = "";
       }
@@ -41,9 +41,11 @@ Swal.fire({
 });
 
 socket.on("historico-mensagens", (data) => {
+  let newMessage = '';
+  data.forEach(element => {
+    newMessage += `${element.userName} diz: ${element.message}<br/>`;
+  });
   let log = document.getElementById("messageLogs");
-  const newMessage = data[data.length - 1];
-  console.log(newMessage);
-
-  log.innerHTML += `${newMessage.name} diz: ${newMessage.message}<br/>`;
+ 
+  log.innerHTML += newMessage;
 });

@@ -33,7 +33,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 let listaProdutos;
-let listaMensagens = [];
+let listaChat = [];
 
 const initializeSocket = async () => {
   try {
@@ -46,7 +46,8 @@ const initializeSocket = async () => {
       socket.on("mensagem-chat", async (data) => {
         const { user, message } = data;
         try {
-          socket.emit("historico-mensagens", [data]);
+          listaChat = await Chat.find();
+          socket.emit("historico-mensagens",listaChat);
         } catch (error) {
           console.error("Error saving message:", error.message);
         }

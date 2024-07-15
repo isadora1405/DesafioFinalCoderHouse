@@ -1,14 +1,14 @@
 const Chat = require("./../dao/models/chatModel.model");
 
 exports.saveMessage = async (req, res) => {
-  const { user, message } = req.body;
+  const { userEmail, message, userName } = req.body;
 
-  if (!user || !message) {
+  if (!userEmail || !message, !userName) {
     return res.status(400).json({ error: "User and message are required." });
   }
 
   try {
-    const newMessage = new Chat({ user, message });
+    const newMessage = new Chat({ userName, message, userEmail });
     await newMessage.save();
     res.status(201).json({ message: "Message saved successfully." });
   } catch (error) {
