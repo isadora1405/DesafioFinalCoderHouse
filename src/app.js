@@ -8,6 +8,7 @@ const { Server } = require("socket.io");
 const Products = require("./dao/models/productsModel.model.js");
 const connectDB = require("./config/database.js");
 const methodOverride = require("method-override");
+const Chat = require("./dao/models/chatModel.model.js");
 
 const app = express();
 connectDB();
@@ -27,7 +28,6 @@ app.use(methodOverride("_method"));
 app.use("/", routesView);
 app.use("/realTimeProducts", routesView);
 
-//app.use('/chat', routerChat);
 app.use(express.static(__dirname + "/public"));
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
@@ -42,11 +42,14 @@ const initializeSocket = async () => {
     io.on("connection", (socket) => {
       console.log("New client connected");
       socket.emit("productItem", listaProdutos);
-      io.emit("historico-mensagens", listaMensagens);
 
-      socket.on("mensagem-chat", (data) => {
-        listaMensagens.push(data);
-        io.emit("historico-mensagens", listaMensagens);
+      socket.on("mensagem-chat", async (data) => {
+        const { user, message } = data;
+        try {
+          socket.emit("historico-mensagens", [data]);
+        } catch (error) {
+          console.error("Error saving message:", error.message);
+        }
       });
 
       socket.on("message", (data) => {
