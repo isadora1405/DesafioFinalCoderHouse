@@ -76,3 +76,19 @@
 #productForm button:hover {
     background-color: #45a049;
 }
+
+#paginationControls {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#paginationControls button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#paginationControls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
