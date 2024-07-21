@@ -8,6 +8,7 @@ let paginate = {
     totalDocs: 0
 }
 
+let listProducts = [];
 
 const getProducts = async (page = 1) => {
     const response = await fetch(`/api/products?limit=2&page=${page}`, {
@@ -27,7 +28,8 @@ const getProducts = async (page = 1) => {
     paginate.hasNextPage = data.hasNextPage;
     paginate.hasPrevPage = data.hasPrevPage;
     paginate.totalDocs = data.totalDocs;
-   
+    listProducts = data.payload;
+
     let log = document.getElementById('productItem');
 
     let table = `<table class="table">
@@ -47,18 +49,20 @@ const getProducts = async (page = 1) => {
         </thead>
         <tbody>`;
 
-    data.payload.forEach(message => {
+    data.payload.forEach(product => {
         table += `<tr class="table-row">
-            <td class="table-cell">${message._id}</td>
-            <td class="table-cell">${message.title}</td>
-            <td class="table-cell">${message.description}</td>
-            <td class="table-cell">${message.code}</td>
-            <td class="table-cell">${message.price}</td>
-            <td class="table-cell">${message.category}</td>
-            <td class="table-cell">${message.thumbnail}</td>
-            <td class="table-cell">${message.stock}</td>
-            <td class="table-cell">${message.status}</td>
-            <td class="table-cell"><button onclick="deleteProduct('${message._id}')">Excluir</button></td>
+            <td class="table-cell">${product._id}</td>
+            <td class="table-cell">${product.title}</td>
+            <td class="table-cell">${product.description}</td>
+            <td class="table-cell">${product.code}</td>
+            <td class="table-cell">${product.price}</td>
+            <td class="table-cell">${product.category}</td>
+            <td class="table-cell">${product.thumbnail}</td>
+            <td class="table-cell">${product.stock}</td>
+            <td class="table-cell">${product.status}</td>
+            <td class="table-cell">
+                <button onclick="addCart('${product._id}')">Adicionar ao Carrinho</button>
+            </td>
         </tr>`;
     });
 
@@ -70,6 +74,11 @@ const getProducts = async (page = 1) => {
     document.getElementById('prevPage').disabled = !paginate.hasPrevPage;
     document.getElementById('nextPage').disabled = !paginate.hasNextPage;
     ;
+};
+
+const addCart = (_id) => {
+    const product = listProducts.find(product => product._id ===  _id);
+    console.log("Produto", product);
 };
 
 const nextPage = () => {
