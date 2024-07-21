@@ -9,4 +9,8 @@ router.get('/realTimeProducts', (req, res)=>{
     res.render('realTimeProducts', {style: "index.css"});
 })
 
+router.get('/products', (req, res)=>{
+    res.render('products', {style: "products.css"});
+})
+
 module.exports = router;

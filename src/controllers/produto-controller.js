@@ -1,20 +1,48 @@
+const { json } = require("express");
 const Products = require("./../dao/models/productsModel.model");
 
 const getProduct = async (req, resp) => {
-  const limit = req.query.limit;
+const query = definirQuery(req.query)
 
+const options = {
+  page: req.query.page ? parseInt(req.query.page) : 1,
+  limit: req.query.limit ? parseInt(req.query.limit) : 10,
+  sort: req.query.sort ? {price: definirOrdem(req.query.sort)} : {} // Ordenação por preço em ordem decrescente
+}; 
+  
   try {
-    const listProducts = await Products.find();
-    if (limit && listProducts.length && listProducts.length > limit) {
-      resp.send(listProducts.slice(0, limit));
-      return;
-    }
+    const listProducts = await Products.paginate(query, options);
+    listProducts.status = "sucesso";
+    listProducts.payload = listProducts.docs;
+    delete listProducts.docs;
 
-    resp.send(listProducts);
+    resp.status(200).json(listProducts);
   } catch (error) {
     resp.status(500).json({ error: error.message });
   }
 };
+
+function definirQuery(query) {
+  const { category, disponibilidade }  = query;
+  let dados = {};
+  if (category) {
+    dados.category = category
+  }
+  
+  if (disponibilidade) {
+    dados.status = disponibilidade;
+  }
+
+  return dados;
+}
+
+function definirOrdem(valor) {
+  if (valor === 'desc') {
+    return -1;
+  }
+
+  return 1;
+}
 
 const getProductById = async (req, res) => {
   try {
