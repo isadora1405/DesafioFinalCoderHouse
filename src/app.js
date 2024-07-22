@@ -22,7 +22,16 @@ const httpServer = app.listen(port, () => {
 });
 const io = new Server(httpServer);
 
-app.engine("handlebars", handlebars.engine());
+app.engine(
+  "handlebars",
+  handlebars.engine({
+    helpers: {
+      calculateTotal: (price, quantity) => {
+        return `R$ ${(price * quantity).toFixed(2)}`;
+      },
+    },
+  })
+);
 app.use(methodOverride("_method"));
 
 app.use("/", routesView);
@@ -48,7 +57,7 @@ const initializeSocket = async () => {
         const { user, message } = data;
         try {
           listaChat = await Chat.find();
-          socket.emit("historico-mensagens",listaChat);
+          socket.emit("historico-mensagens", listaChat);
         } catch (error) {
           console.error("Error saving message:", error.message);
         }
