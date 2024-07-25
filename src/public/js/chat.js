@@ -31,7 +31,7 @@ Swal.fire({
   chatBox.addEventListener("keyup", async (evt) => {
     if (evt.key === "Enter") {
       if (chatBox.value.trim().length > 0) {
-        const data = { user: user, message: chatBox.value, userNameame: userName };
+        const data = { user: user, message: chatBox.value, userName: userName };
         await sendMessage(user, chatBox.value, userName);
         socket.emit("mensagem-chat", data);
         chatBox.value = "";
@@ -41,11 +41,8 @@ Swal.fire({
 });
 
 socket.on("historico-mensagens", (data) => {
-  let newMessage = '';
-  data.forEach(element => {
-    newMessage += `${element.userName} diz: ${element.message}<br/>`;
-  });
   let log = document.getElementById("messageLogs");
- 
-  log.innerHTML += newMessage;
+  const newMessage = data[data.length - 1];
+
+  log.innerHTML += `${newMessage.userName} diz: ${newMessage.message}<br/>`;
 });

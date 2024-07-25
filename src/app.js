@@ -56,8 +56,7 @@ const initializeSocket = async () => {
       socket.on("mensagem-chat", async (data) => {
         const { user, message } = data;
         try {
-          listaChat = await Chat.find();
-          socket.emit("historico-mensagens", listaChat);
+          io.emit("historico-mensagens", [data]);
         } catch (error) {
           console.error("Error saving message:", error.message);
         }
@@ -100,6 +99,4 @@ app.use("/api/products", produtoRouter);
 app.use("/api/carts", cartRouter);
 app.use("/chat", chatRouter);
 
-function getProducts() {
-
-}
+function getProducts() {}
