@@ -1,0 +1,21 @@
+<div class="container">
+  <h1>Login</h1>
+  <form action="/api/sessions/login" method="POST">
+    <div class="form-info">
+      <label class="form-label" for="email">Email:</label>
+      <input class="form-input" type="email" id="email" name="email" required />
+    </div>
+    <div class="form-info">
+      <label class="form-label" for="password">Password:</label>
+      <input
+        class="form-input"
+        type="password"
+        id="password"
+        name="password"
+        required
+      />
+    </div>
+    <button class="login-button" type="submit">Login</button>
+  </form>
+  <a class="register-link" href="/api/user/register">Register</a>
+</div>

@@ -6,12 +6,14 @@ const routesView = require("./routes/view.router.js");
 const chatRouter = require("./routes/chat.router.js");
 const { Server } = require("socket.io");
 const Products = require("./dao/models/productsModel.model.js");
-const connectDB = require("./config/database.js");
+const { connectDB, sessionConfig } = require("./config/database.js");
 const methodOverride = require("method-override");
-const Chat = require("./dao/models/chatModel.model.js");
+const sessionRouter = require("./routes/sessionRoutes.js");
+const userRouter = require("./routes/user-router.js");
 
 const app = express();
 connectDB();
+app.use(sessionConfig);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -98,5 +100,7 @@ initializeSocket();
 app.use("/api/products", produtoRouter);
 app.use("/api/carts", cartRouter);
 app.use("/chat", chatRouter);
+app.use("/api/sessions", sessionRouter);
+app.use("/api/user", userRouter);
 
 function getProducts() {}

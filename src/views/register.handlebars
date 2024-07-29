@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>Register</h1>
+  <form class="register-form" action="/api/sessions/register" method="POST">
+    <div class="form-info">
+      <label class="form-label" for="first_name">First Name:</label>
+      <input
+        class="form-input"
+        type="text"
+        id="first_name"
+        name="first_name"
+        required
+      />
+    </div>
+    <div class="form-info">
+      <label class="form-label" for="last_name">Last Name:</label>
+      <input
+        class="form-input"
+        type="text"
+        id="last_name"
+        name="last_name"
+        required
+      />
+    </div>
+    <div class="form-info">
+      <label class="form-label" for="email">Email:</label>
+      <input class="form-input" type="email" id="email" name="email" required />
+    </div>
+    <div class="form-info">
+      <label class="form-label" for="password">Password:</label>
+      <input
+        class="form-input"
+        type="password"
+        id="password"
+        name="password"
+        required
+      />
+    </div>
+    <button class="register-button" type="submit">Register</button>
+  </form>
+  <a class="login-link" href="/api/user/login">Login</a>
+</div>
