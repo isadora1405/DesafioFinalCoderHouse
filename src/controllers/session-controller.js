@@ -27,6 +27,7 @@ const loginUser = async (req, res) => {
     req.session.user = { name: user.first_name, role: role };
 
     await req.session.save();
+    res.cookie('userName', user.first_name, { httpOnly: false });
     res.redirect("/products");
   } catch (err) {
     res.status(400).send("Erro ao logar usuário");
