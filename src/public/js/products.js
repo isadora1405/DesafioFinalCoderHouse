@@ -128,7 +128,7 @@ const logout = async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("response", response);
+    console.log("response", response.url);
     if (response.ok) {
       Swal.fire({
         icon: "success",
@@ -139,7 +139,7 @@ const logout = async () => {
         timer: 3000,
         timerProgressBar: false,
       }).then(() => {
-        window.location.href = "/api/user/login"; // Redirecionar para a página de login após logout
+        window.location.href = response.url; // Redirecionar para a página de login após logout
       });
     } else {
       Swal.fire({
