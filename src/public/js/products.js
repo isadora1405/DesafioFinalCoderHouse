@@ -118,4 +118,54 @@ const prevPage = () => {
   getProducts(paginate.prevPage);
 };
 
+const logout = async () => {
+  const url = "http://localhost:8080/api/sessions/logout";
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("response", response)
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Deslogado com sucesso",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: false,
+      }).then(() => {
+        window.location.href = "/login"; // Redirecionar para a página de login após logout
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Erro ao deslogar",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: false,
+      });
+    }
+  } catch (error) {
+    console.error("Erro de rede", error);
+    Swal.fire({
+      icon: "error",
+      title: "Erro de rede",
+      text: error.message,
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: false,
+    });
+  }
+};
+
+
 getProducts();

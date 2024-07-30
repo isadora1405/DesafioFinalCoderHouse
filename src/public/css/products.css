@@ -92,3 +92,17 @@
     cursor: not-allowed;
     opacity: 0.5;
 }
+
+#logoutContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#logoutButton {
+    padding: 10px 20px;
+    background-color: #f00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
