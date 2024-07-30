@@ -36,7 +36,7 @@ const loginUser = async (req, res) => {
 const logoutUser = (req, res) => {
   req.session.destroy((err) => {
     if (!err) {
-      res.redirect("/login");
+      res.redirect("/api/user/login");
     } else {
       res.send({ status: "Logout error", body: err });
     }
