@@ -8,7 +8,8 @@ const registerUser = async (req, res) => {
   try {
     const user = new User({ first_name, last_name, email, age, password });
     await user.save();
-    res.redirect("/login");
+ //   res.redirect("/login");
+    res.render("login", { style: "login.css" });
   } catch (err) {
     res.status(400).send("Erro ao registrar usuário");
   }
