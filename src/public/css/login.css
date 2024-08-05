@@ -55,6 +55,13 @@ body {
   background-color: #0056b3;
 }
 
+.github-link {
+  display: block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
 .register-link {
   display: block;
   margin-top: 10px;
@@ -64,4 +71,10 @@ body {
 
 .register-link:hover {
   text-decoration: underline;
+}
+
+.divider {
+  height: 1px;
+  background-color: #ddd;
+  margin: 10px 0;
 }
