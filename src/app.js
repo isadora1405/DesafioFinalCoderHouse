@@ -10,10 +10,13 @@ const { connectDB, sessionConfig } = require("./config/database.js");
 const methodOverride = require("method-override");
 const sessionRouter = require("./routes/sessionRoutes.js");
 const userRouter = require("./routes/user-router.js");
-
+const passport = require("passport");
+const initializePassport = require("./config/passport.config.js");
 const app = express();
 connectDB();
+initializePassport();
 app.use(sessionConfig);
+app.use(passport.initialize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
