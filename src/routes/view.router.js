@@ -11,5 +11,6 @@ router.get('/realTimeProducts', (req, res)=>{
 })
 
 router.get('/products', authMiddleware, (req, res)=> res.render('products', {style: "products.css"}));
+router.get('/carts', authMiddleware, (req, res)=> res.render('carts', {style: "products.css"}));
 
 module.exports = router;
