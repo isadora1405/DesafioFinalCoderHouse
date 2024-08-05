@@ -62,3 +62,17 @@ document
       }
     });
   });
+
+  const buscarDados = async () => {
+    const response = await fetch(`/api/carts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Dados", response.json())
+  };
+
+  
+buscarDados();

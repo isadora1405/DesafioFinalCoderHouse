@@ -39,6 +39,7 @@ app.use(methodOverride("_method"));
 app.use("/", routesView);
 app.use("/realTimeProducts", routesView);
 app.use("/products", routesView);
+app.use("/carts", routesView);
 
 app.use(express.static(__dirname + "/public"));
 app.set("views", __dirname + "/views");
