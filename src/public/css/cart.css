@@ -99,7 +99,7 @@ body {
 }
 
 #clear-cart {
-  width: 150px;
+  width: 180px;
   height: 40px;
   background-color: #e1e8ee;
   border-radius: 6px;
@@ -134,3 +134,24 @@ body {
   background-color: #3085d6;
   color: white;
 }
+
+#list-products {
+  display: block;
+  width: 180px;
+  height: 40px;
+  padding: 10px 20px;
+  margin: 20px auto;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+#list-products:hover {
+  background-color: #0056b3;
+}
+

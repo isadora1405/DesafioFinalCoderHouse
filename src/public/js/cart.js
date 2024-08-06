@@ -74,5 +74,22 @@ document
     console.log("Dados", re.payload[0])
   };
 
+  const irParaProdutos = async () => {
+    const url = "http://localhost:8080/products";
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("response", response);
+      window.location.href = response.url; // Redirecionar para a página de login após logout
+    } catch (error) {
+      console.error("Erro de rede", error);
+    }
+  };
+
   
 buscarDados();
