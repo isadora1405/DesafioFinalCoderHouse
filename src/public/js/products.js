@@ -182,5 +182,18 @@ function definirTitulo() {
   titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de produtos`
 }
 
+const irParaCarrinho = async () => {
+  const url = "http://localhost:8080/carts/" + cid;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  console.log('Response', response)
+  console.log('Chegou aqui', cid);
+  window.location.href = response.url; 
+}
+
 definirTitulo();
 getProducts();

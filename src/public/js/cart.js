@@ -70,8 +70,8 @@ document
         "Content-Type": "application/json",
       },
     });
-
-    console.log("Dados", response.json())
+    const re = await response.json();
+    console.log("Dados", re.payload[0])
   };
 
   
