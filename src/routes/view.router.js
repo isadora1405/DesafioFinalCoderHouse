@@ -29,7 +29,7 @@ router.get("/carts/:id", authMiddleware, async (req, res) => {
 });
 
 router.get("/login", async (req, res) => {
-  res.render("login");
+  res.render("login", { style: "login.css" });
 });
 
 module.exports = router;
