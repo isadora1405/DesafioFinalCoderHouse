@@ -1,4 +1,4 @@
-const User = require("../model/user");
+const User = require("../dao/models/user.model");
 
 const getLoginPage = (req, res) => {
   if (req.session.user) {

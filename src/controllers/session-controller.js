@@ -1,4 +1,5 @@
-const User = require("../model/user");
+const User = require("../dao/models/user.model.js");
+const Cart = require("../dao/models/cartsModel.model.js");
 const { createHash } = require("../utils.js");
 const passport = require("passport");
 
@@ -6,14 +7,24 @@ const ADMIN_EMAIL = "adminCoder@coder.com";
 const ADMIN_PASSWORD = "adminCod3r123";
 
 const registerUser = (req, res, next) => {
-  passport.authenticate("register", (err, user, info) => {
+  passport.authenticate("register", async (err, user, info) => {
     if (err) {
       return res.status(400).send("Erro ao registrar usuário");
     }
     if (!user) {
       return res.redirect("/failregister");
     }
-    res.render("login", { style: "login.css" });
+    try {
+      const newCart = new Cart({});
+      await newCart.save();
+
+      user.cartId = newCart._id;
+      await user.save();
+
+      res.render("login", { style: "login.css" });
+    } catch (error) {
+      return res.status(500).send("Erro ao associar carrinho ao usuário");
+    }
   })(req, res, next);
 };
 
@@ -39,7 +50,12 @@ const loginUser = (req, res, next) => {
         user.password === createHash(ADMIN_PASSWORD)
           ? "admin"
           : "user";
-      req.session.user = { name: user.first_name, role: role };
+
+      req.session.user = {
+        name: user.first_name,
+        role: role,
+        cartId: user.cartId,
+      };
 
       req.session.save((err) => {
         if (err) {

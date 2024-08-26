@@ -9,7 +9,30 @@ let paginate = {
 };
 
 let listProducts = [];
-let cid = "66951b80b92bf0319e6bcb38"; //Id do caqrrinho colocado em uma variável global, mas futuramente pode ser buscado do localStorage
+let cid = "";
+
+const getCartId = async () => {
+  try {
+    const response = await fetch("/api/carts/my-cart", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao obter o carrinho");
+    }
+    const cart = await response.json();
+    if (!cart || !cart._id) {
+      throw new Error("Carrinho não encontrado");
+    }
+
+    return cart._id;
+  } catch (error) {
+    console.error("Erro ao obter o id do carrinho:", error.message);
+    throw error;
+  }
+};
 
 const getProducts = async (page = 1) => {
   const response = await fetch(`/api/products?limit=2&page=${page}`, {
@@ -62,7 +85,7 @@ const getProducts = async (page = 1) => {
             <td class="table-cell">${product.stock}</td>
             <td class="table-cell">${product.status}</td>
             <td class="table-cell">
-                <button onclick="addCart('${cid}', '${product._id}')">Adicionar ao Carrinho</button>
+                <button onclick="addCart('${product._id}')">Adicionar ao Carrinho</button>
             </td>
         </tr>`;
   });
@@ -70,7 +93,6 @@ const getProducts = async (page = 1) => {
   table += `</tbody></table>`;
   log.innerHTML = table;
 
-  // Atualize os controles de paginação
   document.getElementById(
     "pageIndicator"
   ).innerText = `Página ${paginate.currentPage} de ${paginate.totalPages} - Total de itens: ${paginate.totalDocs}`;
@@ -78,8 +100,14 @@ const getProducts = async (page = 1) => {
   document.getElementById("nextPage").disabled = !paginate.hasNextPage;
 };
 
-const addCart = async (cid, pid) => {
-  const url = `/api/carts/${cid}/products/${pid}`;
+const addCart = async (pid) => {
+  const cartId = await getCartId();
+  if (!cartId) {
+    console.error("Erro: Cart ID não disponível");
+    return;
+  }
+
+  const url = `/api/carts/${cartId}/products/${pid}`;
 
   try {
     const response = await fetch(url, {
@@ -128,7 +156,7 @@ const logout = async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("response", response);
+
     if (response.ok) {
       Swal.fire({
         icon: "success",
@@ -154,46 +182,45 @@ const logout = async () => {
     }
   } catch (error) {
     console.error("Erro de rede", error);
-    Swal.fire({
-      icon: "error",
-      title: "Erro de rede",
-      text: error.message,
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: false,
-    });
   }
 };
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 function getUsuarioLoagdo() {
-  return decodeURIComponent(getCookie('userName'));
+  return decodeURIComponent(getCookie("userName"));
 }
 
 function definirTitulo() {
-  const titulo = document.getElementById('titulo');
-  titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de produtos`
+  const titulo = document.getElementById("titulo");
+  titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de produtos`;
 }
 
 const irParaCarrinho = async () => {
-  const url = "http://localhost:8080/carts/" + cid;
+  const cartId = await getCartId();
+  if (!cartId) {
+    console.error("Erro: Cart ID não disponível");
+    return;
+  }
+
+  const url = `http://localhost:8080/carts/${cartId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
-  console.log('Response', response)
-  console.log('Chegou aqui', cid);
-  window.location.href = response.url; 
-}
+
+  if (response.ok) {
+    window.location.href = response.url;
+  } else {
+    console.error("Erro ao acessar o carrinho");
+  }
+};
 
 definirTitulo();
 getProducts();

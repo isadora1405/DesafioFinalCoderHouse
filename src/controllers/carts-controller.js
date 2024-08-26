@@ -1,6 +1,31 @@
 const Carts = require("../dao/models/cartsModel.model");
 const Products = require("./../dao/models/productsModel.model");
 
+const getMyCart = async (req, res) => {
+  const { user } = req;
+
+  if (!user || !user.cartId) {
+    return res.status(400).json({ error: "User does not have a cart" });
+  }
+
+  try {
+    await getCartById({ params: { cid: user.cartId } }, res);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve cart" });
+  }
+};
+
+const addNewProductToMyCart = async (req, res) => {
+  const { user } = req;
+  if (!user || !user.cartId) {
+    return res.status(400).send("User does not have a cart");
+  }
+  await addNewProductToCart(
+    { params: { cid: user.cartId, pid: req.params.pid } },
+    res
+  );
+};
+
 const addNewCart = async (req, res) => {
   try {
     const newCart = new Carts(req.body);
@@ -65,7 +90,7 @@ const getCartById = async (req, res) => {
     if (!cart) {
       return res.status(404).json({ error: "Carrinho não encontrado" });
     }
-    res.render("carts", { cart: cart.toObject(), style: "cart.css" });
+    res.json(cart);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -166,8 +191,10 @@ const updateProductQuantityInCart = async (req, res) => {
 module.exports = {
   addNewCart,
   addNewProductToCart,
+  addNewProductToMyCart,
   getCartById,
   getCarts,
+  getMyCart,
   deleteAllProductsFromCart,
   updateCart,
   updateProductQuantityInCart,

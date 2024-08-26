@@ -1,5 +1,6 @@
 const passport = require("passport");
-const userService = require("../model/user");
+const userService = require("../dao/models/user.model.js");
+const Carts = require("../dao/models/cartsModel.model.js");
 const GitHubStrategy = require("passport-github2");
 const local = require("passport-local");
 const { createHash, isValid } = require("../utils.js");
@@ -11,29 +12,40 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
-        const { first_name, last_name, email } = req.body;
         try {
-          let user = await userService.findOne({ email: username });
+          const { email, age, first_name, last_name } = req.body;
+          let user = await userService.findOne({ email });
+
           if (user) {
-            console.log("O usuário já existe");
-            return done(null, false);
+            return done(null, false, { message: "Email já registrado" });
           }
-          const novoUsuario = {
+
+          const hashedPassword = await createHash(password);
+          user = new userService({
+            email,
+            password: hashedPassword,
+            age,
             first_name,
             last_name,
-            email,
-            password: createHash(password),
-          };
-          let result = await userService.create(novoUsuario);
-          console.log("Usuario criado com sucesso!", result);
-          return done(null, result);
+          });
+
+          let savedUser = await user.save();
+
+          const newCart = new Carts();
+          await newCart.save();
+
+          savedUser.cartId = newCart._id;
+          await savedUser.save();
+
+          return done(null, savedUser);
         } catch (error) {
           console.log("Erro ao registrar o usuário: ", error);
-          return done(`Ocorreu uma falha ao registrar o usuário ${error}`);
+          return done(error);
         }
       }
     )
   );
+
   passport.use(
     "github",
     new GitHubStrategy(
