@@ -4,6 +4,8 @@ const Carts = require("../dao/models/cartsModel.model.js");
 const GitHubStrategy = require("passport-github2");
 const local = require("passport-local");
 const { createHash, isValid } = require("../utils.js");
+const env = require('./env')
+
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
@@ -50,9 +52,9 @@ const initializePassport = () => {
     "github",
     new GitHubStrategy(
       {
-        clientID: "Iv23limMvDHzgaSjgcrF",
-        clientSecret: "8979d7844203dfb1bc7921bffa0b3983de6e2713",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+        clientID: env.GIT_CLIENT_ID,
+        clientSecret: env.GIT_CLIENTSECRET,
+        callbackURL: env.GIT_CALLLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

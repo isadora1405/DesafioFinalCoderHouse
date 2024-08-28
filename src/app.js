@@ -12,6 +12,8 @@ const sessionRouter = require("./routes/sessionRoutes.js");
 const userRouter = require("./routes/user-router.js");
 const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
+const env = require('./config/env')
+
 const app = express();
 connectDB();
 initializePassport();
@@ -21,7 +23,9 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const port = 8080;
+console.log("TESTE", env.porta)
+
+const port = env.PORTA;
 const httpServer = app.listen(port, () => {
   `Servidor ouvindo na porta ${port}`;
 });
