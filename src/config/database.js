@@ -23,7 +23,7 @@ const sessionConfig = session({
     mongoUrl:
       "mongodb+srv://isadora1405:14051992i@codercluster.43rqgyi.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=CoderCluster",
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-    ttl: 15,
+    ttl: 600,
   }),
   secret: "Ecommerce",
   resave: false,
