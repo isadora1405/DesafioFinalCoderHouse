@@ -1,6 +1,3 @@
-//const { json } = require("express");
-const Products = require("./../dao/models/productsModel.model");
-
 
 const ProductDTO = require("./../dto/product.dto.js");
 const { factory } = require("./../dao/factory.js");

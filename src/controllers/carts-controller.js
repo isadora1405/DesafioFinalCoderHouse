@@ -1,6 +1,58 @@
 const Carts = require("../dao/models/cartsModel.model");
 const Products = require("./../dao/models/productsModel.model");
 
+
+const { factory } = require('./../dao/factory');
+const CartDTO = require('./../dto/cart.dto');
+
+const { cartsRepository } = factory();
+
+const getCarts = async (req, res) => {
+  try {
+    const carts = await cartsRepository.getAll();
+    res.status(200).json(carts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getCartById = async (req, res) => {
+  try {
+    const cart = await cartsRepository.getById(req.params.cid)
+    if (!cart) {
+      return res.status(404).json({ error: "Carrinho não encontrado" });
+    }
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const addNewCart = async (req, res) => {
+  try {
+    const newCartDTO = new CartDTO(req.body); // Cria um DTO a partir do corpo da requisição
+    await cartsRepository.create(newCartDTO);
+
+    res.send({ result: "success", payload: newCartDTO });
+  } catch (error) {
+    console.log("erro", error);
+    res.status(500).send("Server Error");
+  }
+};
+
+const deleteAllProductsFromCart = async (req, res) => {
+  
+  try {
+    const result = await cartsRepository.delete(req.params.cid);
+    if (!result.deletedCount) {
+      return res.status(404).json({ success: false, msg: "Carrinho não encontrado" });
+    }
+    res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const getMyCart = async (req, res) => {
   const { user } = req;
 
@@ -26,23 +78,11 @@ const addNewProductToMyCart = async (req, res) => {
   );
 };
 
-const addNewCart = async (req, res) => {
-  try {
-    const newCart = new Carts(req.body);
-    await newCart.save();
-
-    res.send({ result: "success", payload: newCart });
-  } catch (error) {
-    console.log("erro", error);
-    res.status(500).send("Server Error");
-  }
-};
-
 const addNewProductToCart = async (req, res) => {
   const { cid, pid } = req.params;
 
   try {
-    const cart = await Carts.findById(cid);
+    const cart = await cartsRepository.getById(cid);
     if (!cart) {
       return res.status(404).json({ error: "Carrinho não encontrado" });
     }
@@ -66,49 +106,6 @@ const addNewProductToCart = async (req, res) => {
       message: "Produto adicionado ao carrinho com sucesso",
       payload: cart,
     });
-  } catch (error) {
-    console.log("erro", error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const getCarts = async (req, res) => {
-  try {
-    const carts = await Carts.find().populate("products.productId");
-    res.send({ result: "success", payload: carts });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
-  }
-};
-
-const getCartById = async (req, res) => {
-  try {
-    const cart = await Carts.findById(req.params.cid).populate(
-      "products.productId"
-    );
-    if (!cart) {
-      return res.status(404).json({ error: "Carrinho não encontrado" });
-    }
-    res.json(cart);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const deleteAllProductsFromCart = async (req, res) => {
-  const { cid } = req.params;
-
-  try {
-    const cart = await Carts.findById(cid);
-    if (!cart) {
-      return res.status(404).send({ error: "Carrinho não encontrado" });
-    }
-
-    cart.products = [];
-    await cart.save();
-
-    res.send("Todos os produtos foram removidos do carrinho com sucesso");
   } catch (error) {
     console.log("erro", error);
     res.status(500).json({ error: error.message });
