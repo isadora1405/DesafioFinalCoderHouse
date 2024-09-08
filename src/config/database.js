@@ -22,7 +22,7 @@ const connectDB = async () => {
 const sessionConfig = session({
   store: mongoStore.create({
     mongoUrl:
-      "mongodb+srv://isadora1405:14051992i@codercluster.43rqgyi.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=CoderCluster",
+    env.BANCO_DADOS,
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
     ttl: 600,
   }),

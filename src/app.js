@@ -13,9 +13,11 @@ const userRouter = require("./routes/user-router.js");
 const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
 const env = require('./config/env')
+const {factory } = require("./dao/factory.js");
+
 
 const app = express();
-connectDB();
+factory();
 initializePassport();
 app.use(sessionConfig);
 app.use(passport.initialize());
