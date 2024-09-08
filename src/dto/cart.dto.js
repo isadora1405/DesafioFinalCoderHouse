@@ -1,4 +1,4 @@
-export default class CartDTO {
+class CartDTO {
   
     constructor(cart) {
       this.products = cart.products.map((product) => ({
@@ -7,4 +7,6 @@ export default class CartDTO {
       }));
     }
   }
+
+  module.exports = CartDTO;
   

@@ -1,17 +1,23 @@
-const { json } = require("express");
+//const { json } = require("express");
 const Products = require("./../dao/models/productsModel.model");
 
-const getProduct = async (req, resp) => {
-const query = definirQuery(req.query)
 
-const options = {
-  page: req.query.page ? parseInt(req.query.page) : 1,
-  limit: req.query.limit ? parseInt(req.query.limit) : 10,
-  sort: req.query.sort ? {price: definirOrdem(req.query.sort)} : {} // Ordenação por preço em ordem decrescente
-}; 
-  
+const ProductDTO = require("./../dto/product.dto.js");
+const { factory } = require("./../dao/factory.js");
+
+const { productRepository } = factory();
+
+const getProduct = async (req, resp) => {
+  const query = definirQuery(req.query);
+
+  const options = {
+    page: req.query.page ? parseInt(req.query.page) : 1,
+    limit: req.query.limit ? parseInt(req.query.limit) : 10,
+    sort: req.query.sort ? { price: definirOrdem(req.query.sort) } : {} // Ordenação por preço
+  };
+
   try {
-    const listProducts = await Products.paginate(query, options);
+    const listProducts = await productRepository.paginate(query, options);
     listProducts.status = "sucesso";
     listProducts.payload = listProducts.docs;
     delete listProducts.docs;
@@ -46,7 +52,7 @@ function definirOrdem(valor) {
 
 const getProductById = async (req, res) => {
   try {
-    const product = await Products.findById(req.params.pid);
+    const product = await productRepository.getById(req.params.pid);
     if (!product) {
       return res.status(404).send({ error: "Produto não encontrado" });
     }
@@ -58,9 +64,9 @@ const getProductById = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const newProducts = new Products(req.body);
-    await newProducts.save();
-    res.status(201).json({ mensagem: "Dados salvo com sucesso!" });
+    const newProductDTO = new ProductDTO(req.body); // Cria um DTO a partir do corpo da requisição
+    await productRepository.create(newProductDTO);  // Passa o DTO para o repositório
+    res.status(201).json({ mensagem: "Produto salvo com sucesso!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -68,10 +74,10 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   let { pid } = req.params;
-  let productsToReplace = req.body;
+  let productsToReplaceDTO = new ProductDTO(req.body); // Cria um DTO para os dados atualizados
 
   try {
-    let result = await Products.updateOne({ _id: pid }, productsToReplace);
+    let result = await productRepository.update(pid, productsToReplaceDTO);
     res.send({ status: "Produto atualizado com sucesso!", payload: result });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -81,11 +87,9 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   let { pid } = req.params;
   try {
-    const product = await Products.deleteOne({ _id: pid });
+    const product = await productRepository.delete(pid);
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "Produto não encontrado" });
+      return res.status(404).json({ success: false, msg: "Produto não encontrado" });
     }
     res.json({ success: true });
   } catch (error) {

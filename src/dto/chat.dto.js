@@ -1,4 +1,4 @@
-export default class ChatDTO {
+class ChatDTO {
     constructor(message) {
         this.userEmail = message.userEmail;
         this.userName = message.userName;
@@ -6,3 +6,5 @@ export default class ChatDTO {
         this.timestamp = message.timestamp || new Date(); // Valor padrão como `Date.now`
       }
 }
+
+module.exports = ChatDTO;

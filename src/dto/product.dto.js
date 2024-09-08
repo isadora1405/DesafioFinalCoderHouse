@@ -1,4 +1,4 @@
-export default class ProductDTO{
+class ProductDTO{
     constructor(product){
         this.title = product.title;
         this.description = product.description;
@@ -10,3 +10,5 @@ export default class ProductDTO{
         this.status = product.status ? product.status : true;
     }
 }
+
+module.exports = ProductDTO;
