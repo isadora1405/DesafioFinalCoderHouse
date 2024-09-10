@@ -188,48 +188,52 @@ const updateProductQuantityInCart = async (req, res) => {
 };
 
 const finalizePurchase = async (req, res) => {
-  const { cid } = req.params;
-  const { totalAmount } = req.body;
-
   try {
-    console.log("Iniciando a finalização da compra para o carrinho:", cid);
-
-    // Obtém o carrinho
+    const { cid } = req.params;
     const cart = await cartsRepository.getById(cid);
+
     if (!cart) {
       return res.status(404).json({ message: "Carrinho não encontrado" });
     }
 
-    console.log("Carrinho obtido:", cart);
+    const unavailableProducts = [];
+    let totalAmount = 0;
 
-    // Faz a chamada para formalizar a compra
-    const response = await fetch(
-      `http://localhost:8080/api/tickets/purchase/${cid}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: totalAmount,
-          purchaser: req.session.user.email,
-          cartId: cid,
-        }),
-        credentials: "include", // Inclui cookies de sessão na requisição
+    for (let item of cart.products) {
+      const product = await productRepository.getById(item.productId);
+
+      if (product.stock >= item.quantity) {
+        product.stock -= item.quantity;
+        await productRepository.update(product._id, { stock: product.stock });
+
+        totalAmount += product.price * item.quantity;
+      } else {
+        unavailableProducts.push(item.productId);
       }
-    );
+    }
 
-    const responseText = await response.text(); // Recebe a resposta como texto
-    console.log("Conteúdo da resposta:", responseText);
+    if (totalAmount > 0) {
+      // Chama o endpoint para criar o ticket
+      const response = await fetch(
+        `http://localhost:8080/api/tickets/purchase/${cid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: totalAmount,
+            purchaser: req.session.user.email,
+            cartId: cid,
+          }),
+        }
+      );
 
-    try {
-      const data = JSON.parse(responseText); // Tenta analisar o texto como JSON
-      console.log("Dados da resposta:", data);
+      console.log("response", response);
 
       if (response.ok) {
-        // Processa a resposta se for um JSON válido
-        cart.products = cart.products.filter(
-          (item) => unavailableProducts.includes(item.productId._id) // Compare corretamente o _id
+        cart.products = cart.products.filter((item) =>
+          unavailableProducts.includes(item.productId)
         );
         await cartsRepository.update(cart._id, { products: cart.products });
 
@@ -238,18 +242,20 @@ const finalizePurchase = async (req, res) => {
           unavailableProducts,
         });
       } else {
-        const error = data;
+        const error = await response.json();
         return res
           .status(500)
           .json({ message: "Erro ao criar o ticket", error });
       }
-    } catch (error) {
-      console.error("Erro ao analisar JSON:", error);
-      return res.status(500).json({ message: "Erro ao analisar a resposta" });
     }
+
+    res.json({
+      message: "Nenhum item foi comprado",
+      unavailableProducts,
+    });
   } catch (error) {
     console.error("Erro ao finalizar a compra:", error);
-    return res.status(500).json({ message: "Erro ao finalizar a compra" });
+    res.status(500).json({ message: "Erro interno do servidor" });
   }
 };
 
