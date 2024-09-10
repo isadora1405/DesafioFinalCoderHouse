@@ -55,6 +55,7 @@ const loginUser = (req, res, next) => {
         name: user.first_name,
         role: role,
         cartId: user.cartId,
+        email: user.email,
       };
 
       req.session.save((err) => {
@@ -78,7 +79,7 @@ const logoutUser = (req, res) => {
   });
 };
 
-const githubAuth = passport.authenticate("github", { scope: ["user:email"] });
+const githubAuth = passport.authenticate("github", { scope: [] });
 
 const githubCallback = (req, res, next) => {
   passport.authenticate(

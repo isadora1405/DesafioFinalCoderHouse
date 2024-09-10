@@ -108,6 +108,16 @@ body {
   font-size: 16px;
 }
 
+#finalize-purchase {
+  width: 180px;
+  height: 40px;
+  background-color: #e1e8ee;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 .swal2-custom-popup {
   font-family: "Arial", sans-serif;
   border-radius: 10px;
@@ -154,4 +164,3 @@ body {
 #list-products:hover {
   background-color: #0056b3;
 }
-

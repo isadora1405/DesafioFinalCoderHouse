@@ -59,15 +59,27 @@ const initializePassport = () => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           console.log(profile);
-          const email = profile._json.email || "default email";
-          let user = await userService.findOne({ email: email });
+
+          // Extrair username do perfil
+          const username =
+            profile.username || profile.displayName || "defaultUsername";
+
+          // Verificar se o usuário já existe pelo username
+          let user = await userService.findOne({ username: username });
+
           if (!user) {
+            // Criar novo usuário
             let newUser = {
-              first_name: profile._json.name || "User",
+              first_name: profile.displayName || "User",
               last_name: "last name",
-              email: email,
-              password: "defaultPassword",
+              username: username,
+              email: profile.emails
+                ? profile.emails[0].value
+                : "defaultEmail@example.com", // Definir um email padrão se não disponível
+              password: "", // Melhor não definir senha para usuários OAuth
             };
+
+            // Adicionar o novo usuário ao banco de dados
             let result = await userService.create(newUser);
             done(null, result);
           } else {
@@ -79,6 +91,7 @@ const initializePassport = () => {
       }
     )
   );
+
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });

@@ -1,12 +1,13 @@
 <div id="cart-container" class="container">
   <div class="title">Meus Pedidos</div>
   {{#each cart.products}}
-    <div class="item">
+    <div
+      class="item cart-item"
+      data-price="{{this.productId.price}}"
+      data-quantity="{{this.quantity}}"
+    >
       <div class="image">
-        <img
-          src="{{this.productId.thumbnail}}"
-          alt="{{this.title}}"
-        />
+        <img src="{{this.productId.thumbnail}}" alt="{{this.title}}" />
       </div>
       <div class="description">
         <span>{{this.productId.title}}</span>
@@ -34,6 +35,9 @@
   </div>
   <div class="clear-cart">
     <button id="clear-cart" data-cart-id="{{cart._id}}">Limpar Carrinho</button>
+  </div>
+  <div class="finalize-purchase">
+    <button id="finalize-purchase" data-cart-id="{{cart._id}}">Finalizar Compra</button>
   </div>
 </div>
 

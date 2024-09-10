@@ -12,9 +12,9 @@ const sessionRouter = require("./routes/sessionRoutes.js");
 const userRouter = require("./routes/user-router.js");
 const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
-const env = require('./config/env')
-const {factory } = require("./dao/factory.js");
-
+const env = require("./config/env");
+const { factory } = require("./dao/factory.js");
+const ticketRouter = require("./routes/ticket-router.js");
 
 const app = express();
 factory();
@@ -25,7 +25,7 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-console.log("TESTE", env.porta)
+console.log("TESTE", env.porta);
 
 const port = env.PORTA;
 const httpServer = app.listen(port, () => {
@@ -112,5 +112,6 @@ app.use("/api/carts", cartRouter);
 app.use("/chat", chatRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/user", userRouter);
+app.use("/api/tickets", ticketRouter);
 
 function getProducts() {}
