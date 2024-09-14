@@ -15,6 +15,7 @@ const initializePassport = require("./config/passport.config.js");
 const env = require("./config/env");
 const { factory } = require("./dao/factory.js");
 const ticketRouter = require("./routes/ticket-router.js");
+const mockProductRouter = require("./routes/mock-product-router.js");
 
 const app = express();
 factory();
@@ -113,5 +114,7 @@ app.use("/chat", chatRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/user", userRouter);
 app.use("/api/tickets", ticketRouter);
+
+app.use("/mockingproducts", mockProductRouter);
 
 function getProducts() {}
