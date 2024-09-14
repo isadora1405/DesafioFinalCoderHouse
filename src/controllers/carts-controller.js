@@ -7,6 +7,7 @@ const CartDTO = require("./../dto/cart.dto");
 
 const { cartsRepository } = factory();
 const { productRepository } = factory();
+const { ticketRepository } = factory();
 
 const getCarts = async (req, res) => {
   try {
@@ -214,7 +215,7 @@ const finalizePurchase = async (req, res) => {
 
     if (totalAmount > 0) {
       // Chama o endpoint para criar o ticket
-      const response = await fetch(
+   /*   const response = await fetch(
         `http://localhost:8080/api/tickets/purchase/${cid}`,
         {
           method: "POST",
@@ -227,11 +228,20 @@ const finalizePurchase = async (req, res) => {
             cartId: cid,
           }),
         }
-      );
+      );*/
 
+      const ticketData = {
+        amount: totalAmount,
+        purchaser: req.session.user.email,
+        cartId: cid,
+      };
+
+      const response = await ticketRepository.createTicket(ticketData);
+      
       console.log("response", response);
 
-      if (response.ok) {
+      if (response) {
+        console.log("Salvou aqui")
         cart.products = cart.products.filter((item) =>
           unavailableProducts.includes(item.productId)
         );

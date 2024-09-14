@@ -136,7 +136,7 @@ const buscarDados = async () => {
     },
   });
   const re = await response.json();
-  console.log("Dados", re.payload[0]);
+  console.log("Dados", re);
 };
 
 const irParaProdutos = async () => {
