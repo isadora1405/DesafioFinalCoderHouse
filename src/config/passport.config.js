@@ -4,7 +4,7 @@ const Carts = require("../dao/models/cartsModel.model.js");
 const GitHubStrategy = require("passport-github2");
 const local = require("passport-local");
 const { createHash, isValid } = require("../utils.js");
-const env = require('./env')
+const env = require("./env");
 
 const LocalStrategy = local.Strategy;
 
@@ -58,28 +58,22 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile);
-
-          // Extrair username do perfil
           const username =
             profile.username || profile.displayName || "defaultUsername";
 
-          // Verificar se o usuário já existe pelo username
           let user = await userService.findOne({ username: username });
 
           if (!user) {
-            // Criar novo usuário
             let newUser = {
               first_name: profile.displayName || "User",
               last_name: "last name",
               username: username,
               email: profile.emails
                 ? profile.emails[0].value
-                : "defaultEmail@example.com", // Definir um email padrão se não disponível
-              password: "", // Melhor não definir senha para usuários OAuth
+                : "defaultEmail@example.com",
+              password: "",
             };
 
-            // Adicionar o novo usuário ao banco de dados
             let result = await userService.create(newUser);
             done(null, result);
           } else {

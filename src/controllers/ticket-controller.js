@@ -3,8 +3,6 @@ const { factory } = require("../dao/factory");
 
 const { cartsRepository } = factory();
 const { ticketRepository } = factory();
-console.log("Cart Repository:", cartsRepository); // Verifique se é impresso corretamente
-console.log("Ticket Repository:", ticketRepository);
 
 const formalizePurchase = async (req, res) => {
   console.log("função chamada");

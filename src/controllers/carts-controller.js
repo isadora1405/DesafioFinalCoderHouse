@@ -1,6 +1,13 @@
 const Carts = require("../dao/models/cartsModel.model");
 const Products = require("./../dao/models/productsModel.model");
 const TicketService = require("./../services/ticketService.js");
+const CustomError = require("../services/errors/customErrors.js");
+const {
+  generateCartNotFoundErrorInfo,
+  generateProductNotFoundErrorInfo,
+  generateOutOfStockErrorInfo,
+  generateServerErrorInfo,
+} = require("../services/errors/info.js");
 
 const { factory } = require("./../dao/factory");
 const CartDTO = require("./../dto/cart.dto");
@@ -87,12 +94,22 @@ const addNewProductToCart = async (req, res) => {
   try {
     const cart = await cartsRepository.getById(cid);
     if (!cart) {
-      return res.status(404).json({ error: "Carrinho não encontrado" });
+      CustomError.createError({
+        name: "Cart Error",
+        message: "Carrinho não encontrado",
+        cause: generateCartNotFoundErrorInfo(cid),
+        code: EErrors.CART_NOT_FOUND,
+      });
     }
 
     const product = await Products.findById(pid);
     if (!product) {
-      return res.status(404).json({ error: "Produto não encontrado" });
+      CustomError.createError({
+        name: "Product Error",
+        message: "Produto não encontrado",
+        cause: generateProductNotFoundErrorInfo(pid),
+        code: EErrors.PRODUCT_NOT_FOUND,
+      });
     }
 
     const existingProductIndex = cart.products.findIndex(
@@ -104,14 +121,27 @@ const addNewProductToCart = async (req, res) => {
       cart.products.push({ productId: pid, quantity: 1 });
     }
 
+    if (product.stock <= 0) {
+      CustomError.createError({
+        name: "Stock Error",
+        message: "Estoque insuficiente",
+        cause: generateOutOfStockErrorInfo(product),
+        code: EErrors.OUT_OF_STOCK,
+      });
+    }
+
     await cart.save();
     res.json({
       message: "Produto adicionado ao carrinho com sucesso",
       payload: cart,
     });
   } catch (error) {
-    console.log("erro", error);
-    res.status(500).json({ error: error.message });
+    CustomError.createError({
+      name: "Server Error",
+      message: error.message,
+      cause: generateServerErrorInfo("adding product to cart", error.message),
+      code: EErrors.SERVER_ERROR,
+    });
   }
 };
 
@@ -215,7 +245,7 @@ const finalizePurchase = async (req, res) => {
 
     if (totalAmount > 0) {
       // Chama o endpoint para criar o ticket
-   /*   const response = await fetch(
+      /*   const response = await fetch(
         `http://localhost:8080/api/tickets/purchase/${cid}`,
         {
           method: "POST",
@@ -237,11 +267,10 @@ const finalizePurchase = async (req, res) => {
       };
 
       const response = await ticketRepository.createTicket(ticketData);
-      
+
       console.log("response", response);
 
       if (response) {
-        console.log("Salvou aqui")
         cart.products = cart.products.filter((item) =>
           unavailableProducts.includes(item.productId)
         );

@@ -149,7 +149,6 @@ const irParaProdutos = async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("response", response);
     window.location.href = response.url; // Redirecionar para a página de login após logout
   } catch (error) {
     console.error("Erro de rede", error);

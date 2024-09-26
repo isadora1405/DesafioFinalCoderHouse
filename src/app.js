@@ -16,12 +16,14 @@ const env = require("./config/env");
 const { factory } = require("./dao/factory.js");
 const ticketRouter = require("./routes/ticket-router.js");
 const mockProductRouter = require("./routes/mock-product-router.js");
+const errorHandler = require("./middleware/errors/index.js");
 
 const app = express();
 factory();
 initializePassport();
 app.use(sessionConfig);
 app.use(passport.initialize());
+app.use(errorHandler);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
