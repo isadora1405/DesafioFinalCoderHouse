@@ -15,18 +15,13 @@ const getRegisterPage = (req, res) => {
   res.render("register", { style: "register.css" });
 };
 
-// Função para obter o usuário atual
 const getCurrentUser = (req, res) => {
-  if (req.user) {
-    const userDTO = new UserDTO(req.user); // Converte o usuário em um DTO
-    return res.json(userDTO); // Envia as informações necessárias
+  if (req.session.user) {
+    const userDTO = new UserDTO(req.session.user);
+    return res.json(userDTO);
   } else {
     return res.status(401).json({ message: "Unauthorized" });
   }
-};
-
-module.exports = {
-  getCurrentUser,
 };
 
 module.exports = {

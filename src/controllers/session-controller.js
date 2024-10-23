@@ -53,6 +53,8 @@ const loginUser = (req, res, next) => {
 
       req.session.user = {
         name: user.first_name,
+        lastName: user.last_name,
+        age: user.age,
         role: role,
         cartId: user.cartId,
         email: user.email,
