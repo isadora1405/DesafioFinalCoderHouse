@@ -63,7 +63,7 @@ const loginUser = (req, res, next) => {
           return res.status(400).send("Erro ao salvar a sessão");
         }
         res.cookie("userName", user.first_name, { httpOnly: false });
-        res.redirect("/products");
+        res.redirect(user.role === "admin" ? "/realTimeProducts" : "/products");
       });
     });
   })(req, res, next);
