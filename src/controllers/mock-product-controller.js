@@ -1,15 +1,15 @@
-const generateMockProduct = require("../mock/product-mock"); // Importando a função de mock
+const generateMockProduct = require("../mock/product-mock");
+const logger = require("../utils/logger.js");
 
-// Controller para gerar e retornar 100 produtos mocks
 const getProduct = async (req, resp) => {
   try {
-    // Gera uma lista de 100 produtos mocks
-    const mockProducts = Array.from({ length: 100 }, () => generateMockProduct());
-
-    // Retorna os produtos no formato JSON
+    const mockProducts = Array.from({ length: 100 }, () =>
+      generateMockProduct()
+    );
+    logger.info("100 produtos mocks gerados com sucesso.");
     resp.status(200).json(mockProducts);
   } catch (error) {
-    console.error("Erro ao gerar produtos mocks:", error);
+    logger.error("Erro ao gerar produtos mocks:", error);
     resp.status(500).json({ message: "Erro interno do servidor" });
   }
 };

@@ -17,6 +17,8 @@ const { factory } = require("./dao/factory.js");
 const ticketRouter = require("./routes/ticket-router.js");
 const mockProductRouter = require("./routes/mock-product-router.js");
 const errorHandler = require("./middleware/errors/index.js");
+const addLogger = require("./middleware/logger.js");
+const loggerTestRoute = require("./routes/logger-router.js");
 
 const app = express();
 factory();
@@ -24,6 +26,7 @@ initializePassport();
 app.use(sessionConfig);
 app.use(passport.initialize());
 app.use(errorHandler);
+app.use(addLogger);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,6 +55,7 @@ app.use("/", routesView);
 app.use("/realTimeProducts", routesView);
 app.use("/products", routesView);
 app.use("/carts", routesView);
+app.use("/api", loggerTestRoute);
 
 app.use(express.static(__dirname + "/public"));
 app.set("views", __dirname + "/views");
