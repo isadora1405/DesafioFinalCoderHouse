@@ -1,0 +1,73 @@
+paths:
+  /api/user/login:
+    get:
+      summary: Retorna a página de login
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Página de login renderizada
+        "403":
+          description: Acesso proibido - usuário não autorizado para esta operação
+        "500":
+          description: Erro interno do servidor
+
+  /api/user/register:
+    get:
+      summary: Retorna a página de registro
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Página de registro renderizada
+        "403":
+          description: Acesso proibido - usuário não autorizado para esta operação
+        "500":
+          description: Erro interno do servidor
+
+  /api/user/current:
+    get:
+      summary: Retorna informações do usuário logado
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Informações do usuário logado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "401":
+          description: Unauthorized - usuário não autenticado
+        "500":
+          description: Erro interno do servidor
+
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        first_name:
+          type: String
+          description: Nome do usuário
+        last_name:
+          type: String
+          description: Sobrenome do usuário
+        age:
+          type: Number
+          description: Idade do usuário
+        role:
+          type: String
+          description: Tipo de usuário
+      example:
+        first_name: João
+        last_name: Silva
+        age: 20
+        role: user
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid

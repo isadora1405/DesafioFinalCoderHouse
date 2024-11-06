@@ -1,5 +1,5 @@
 const Cart = require("../dao/models/cartsModel.model.js");
-const { createHash } = require("../utils.js");
+const { createHash } = require("../utils/utils.js");
 const passport = require("passport");
 const logger = require("../utils/logger.js");
 

@@ -19,6 +19,9 @@ const mockProductRouter = require("./routes/mock-product-router.js");
 const errorHandler = require("./middleware/errors/index.js");
 const addLogger = require("./middleware/logger.js");
 const loggerTestRoute = require("./routes/logger-router.js");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUiExpress = require("swagger-ui-express");
+const __dirName = require("./utils/utils.js");
 
 const app = express();
 factory();
@@ -28,10 +31,22 @@ app.use(passport.initialize());
 app.use(errorHandler);
 app.use(addLogger);
 
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentação do projeto final CoderHouse",
+      description: "API do projeto",
+    },
+  },
+  apis: [`${__dirname}/utils/doc/**/*.yaml`],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-console.log("TESTE", env.porta);
 
 const port = env.PORTA;
 const httpServer = app.listen(port, () => {

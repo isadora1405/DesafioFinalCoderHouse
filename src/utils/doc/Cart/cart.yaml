@@ -1,0 +1,477 @@
+paths:
+  /api/carts/my-cart:
+    get:
+      summary: Recupera o carrinho do usuário autenticado
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Carrinho do usuário recuperado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          description: ID do produto
+                        quantity:
+                          type: integer
+                          description: Quantidade do produto
+                  total:
+                    type: number
+                    description: Valor total do carrinho
+                example:
+                  products:
+                    - productId: "60d21b4667d0d8992e610c85"
+                      quantity: 2
+                  total: 29.98
+        "400":
+          description: Usuário não possui carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Usuário não possui carrinho"
+        "500":
+          description: Erro ao recuperar o carrinho do usuário
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro ao recuperar o carrinho"
+
+  /api/carts:
+    get:
+      summary: Recupera todos os carrinhos
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Carrinhos recuperados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID do carrinho
+                    products:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          productId:
+                            type: string
+                            description: ID do produto
+                          quantity:
+                            type: integer
+                            description: Quantidade do produto
+                example:
+                  - id: "60d21b4667d0d8992e610c85"
+                    products:
+                      - productId: "60d21b4667d0d8992e610c85"
+                        quantity: 2
+                  - id: "60d21b4667d0d8992e610c86"
+                    products:
+                      - productId: "60d21b4667d0d8992e610c87"
+                        quantity: 1
+        "500":
+          description: Erro ao recuperar os carrinhos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro ao recuperar carrinhos"
+
+    post:
+      summary: Adiciona um novo carrinho
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCart"
+      responses:
+        "201":
+          description: Carrinho criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "success"
+                  payload:
+                    $ref: "#/components/schemas/NewCart"
+        "500":
+          description: Erro ao criar o carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro no servidor"
+
+  /api/carts/{cid}:
+    get:
+      summary: Recupera um carrinho pelo ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID do carrinho
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrinho recuperado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID do carrinho
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          description: ID do produto
+                        quantity:
+                          type: integer
+                          description: Quantidade do produto
+                example:
+                  id: "60d21b4667d0d8992e610c85"
+                  products:
+                    - productId: "60d21b4667d0d8992e610c85"
+                      quantity: 2
+        "404":
+          description: Carrinho não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Carrinho não encontrado"
+        "500":
+          description: Erro ao recuperar o carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro ao recuperar carrinho"
+
+    delete:
+      summary: Remove todos os produtos do carrinho
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID do carrinho
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Produtos excluídos do carrinho com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        "404":
+          description: Carrinho não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Carrinho não encontrado"
+        "500":
+          description: Erro ao excluir produtos do carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro no servidor"
+
+    put:
+      summary: Atualiza o carrinho
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID do carrinho
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCart"
+      responses:
+        "200":
+          description: Carrinho atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "success"
+                  payload:
+                    $ref: "#/components/schemas/Cart"
+        "404":
+          description: Carrinho não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Carrinho não encontrado"
+        "500":
+          description: Erro ao atualizar o carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro no servidor"
+
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Finaliza a compra do carrinho
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID do carrinho
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Compra concluída com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Compra concluída com sucesso"
+                  unavailableProducts:
+                    type: array
+                    items:
+                      type: string
+                      description: IDs dos produtos indisponíveis
+        "404":
+          description: Carrinho não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Carrinho não encontrado"
+        "500":
+          description: Erro ao finalizar a compra
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erro interno do servidor"
+
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Adiciona um produto ao carrinho
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID do carrinho
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID do produto
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Produto adicionado ao carrinho com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Produto adicionado ao carrinho com sucesso"
+                  payload:
+                    $ref: "#/components/schemas/Cart"
+        "404":
+          description: Carrinho ou produto não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Carrinho ou produto não encontrado"
+        "500":
+          description: Erro ao adicionar o produto ao carrinho
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erro no servidor"
+
+    put:
+      summary: "Update product quantity in cart"
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "Cart ID"
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: "Product ID"
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+      responses:
+        "200":
+          description: "Product quantity updated successfully"
+        "404":
+          description: "Cart or product not found"
+        "400":
+          description: "Invalid quantity provided"
+
+components:
+  schemas:
+    NewCart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID do produto
+              quantity:
+                type: integer
+                description: Quantidade do produto
+    UpdateCart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID do produto
+              quantity:
+                type: integer
+                description: Quantidade do produto
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID do carrinho
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID do produto
+              quantity:
+                type: integer
+                description: Quantidade do produto
