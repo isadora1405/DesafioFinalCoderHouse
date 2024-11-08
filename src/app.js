@@ -113,6 +113,7 @@ app.use("/api/carts", cartRouter);
 app.use("/chat", chatRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/tickets", ticketRouter);
 
 app.use("/mockingproducts", mockProductRouter);

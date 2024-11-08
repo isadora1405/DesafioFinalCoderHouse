@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
     ref: "Carts",
   },
   role: { type: String, default: "user" },
+  last_accessed: { 
+    type: Date, 
+    default: new Date('2024-11-04T03:00:00.000Z')
+  }
 });
 
 const User = mongoose.model("User", userSchema);

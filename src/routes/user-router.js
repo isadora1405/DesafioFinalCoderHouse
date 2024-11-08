@@ -8,4 +8,8 @@ router.get("/login", userController.getLoginPage);
 router.get("/register", userController.getRegisterPage);
 router.get("/current", authMiddleware, userController.getCurrentUser);
 
+router.get("/", userController.getUser);
+router.delete("/", userController.deleteInactiveUsers);
+
+
 module.exports = router;

@@ -62,6 +62,9 @@ const loginUser = (req, res, next) => {
         if (err) {
           return res.status(400).send("Erro ao salvar a sessão");
         }
+
+        user.last_accessed = new Date();
+        user.save();
         res.cookie("userName", user.first_name, { httpOnly: false });
         res.redirect("/products");
       });
