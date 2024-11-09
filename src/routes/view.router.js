@@ -32,4 +32,8 @@ router.get("/login", async (req, res) => {
   res.render("login", { style: "login.css" });
 });
 
+router.get("/users", authMiddleware, (req, res) =>
+  res.render("users", { style: "users.css" })
+);
+
 module.exports = router;

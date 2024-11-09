@@ -11,31 +11,10 @@ let paginate = {
 let listProducts = [];
 let cid = "";
 
-const getCartId = async () => {
-  try {
-    const response = await fetch("/api/carts/my-cart", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Erro ao obter o carrinho");
-    }
-    const cart = await response.json();
-    if (!cart || !cart._id) {
-      throw new Error("Carrinho não encontrado");
-    }
 
-    return cart._id;
-  } catch (error) {
-    console.error("Erro ao obter o id do carrinho:", error.message);
-    throw error;
-  }
-};
 
-const getProducts = async (page = 1) => {
-  const response = await fetch(`/api/products?limit=2&page=${page}`, {
+const getUsers = async (page = 1) => {
+  const response = await fetch(`/api/users?limit=2&page=${page}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -59,33 +38,25 @@ const getProducts = async (page = 1) => {
   let table = `<table class="table">
         <thead>
             <tr class="table-row table-header">
-                <th class="table-cell">Id</th>
-                <th class="table-cell">Título</th>
-                <th class="table-cell">Descrição</th>
-                <th class="table-cell">Código</th>
-                <th class="table-cell">Preço</th>
-                <th class="table-cell">Categoria</th>
-                <th class="table-cell">Thumbnail</th>
-                <th class="table-cell">Estoque</th>
-                <th class="table-cell">Status</th>
-                <th class="table-cell">Ações</th>
+                <th class="table-cell">Nome</th>
+                <th class="table-cell">Sobrenome</th>
+                <th class="table-cell">Email</th>
+                <th class="table-cell">Tipo</th>
+                <th class="table-cell">Ação</th>
             </tr>
         </thead>
         <tbody>`;
 
-  data.payload.forEach((product) => {
+  data.payload.forEach((user) => {
     table += `<tr class="table-row">
-            <td class="table-cell">${product._id}</td>
-            <td class="table-cell">${product.title}</td>
-            <td class="table-cell">${product.description}</td>
-            <td class="table-cell">${product.code}</td>
-            <td class="table-cell">${product.price}</td>
-            <td class="table-cell">${product.category}</td>
-            <td class="table-cell">${product.thumbnail}</td>
-            <td class="table-cell">${product.stock}</td>
-            <td class="table-cell">${product.status}</td>
+            <td class="table-cell">${user.first_name}</td>
+            <td class="table-cell">${user.last_name}</td>
+            <td class="table-cell">${user.email}</td>
+            <td class="table-cell">${user.role}</td>
             <td class="table-cell">
-                <button onclick="addCart('${product._id}')">Adicionar ao Carrinho</button>
+                <button id="cartsButton" onclick="editar('${user._id}')">Editar</button>
+                <button id="logoutButton" onclick="excluir('${user._id}')">Excluir</button>
+
             </td>
         </tr>`;
   });
@@ -100,50 +71,20 @@ const getProducts = async (page = 1) => {
   document.getElementById("nextPage").disabled = !paginate.hasNextPage;
 };
 
-const addCart = async (pid) => {
-  const cartId = await getCartId();
-  if (!cartId) {
-    console.error("Erro: Cart ID não disponível");
-    return;
-  }
+const editar = async (pid) => {
+  console.log("Editar aqui")
+};
 
-  const url = `/api/carts/${cartId}/products/${pid}`;
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-
-      Swal.fire({
-        icon: "success",
-        title: "Sucesso",
-        text: result.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: false,
-      });
-    } else {
-      console.error("Erro ao adicionar produto ao carrinho");
-    }
-  } catch (error) {
-    console.error("Erro de rede", error);
-  }
+const excluir = async (pid) => {
+  console.log("Excluir aqui")
 };
 
 const nextPage = () => {
-  getProducts(paginate.nextPage);
+  getUsers(paginate.nextPage);
 };
 
 const prevPage = () => {
-  getProducts(paginate.prevPage);
+  getUsers(paginate.prevPage);
 };
 
 const logout = async () => {
@@ -197,7 +138,7 @@ function getUsuarioLoagdo() {
 
 function definirTitulo() {
   const titulo = document.getElementById("titulo");
-  titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de produtos`;
+  titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de usuários`;
 }
 
 const irParaCarrinho = async () => {
@@ -222,9 +163,9 @@ const irParaCarrinho = async () => {
   }
 };
 
-const irListaUsuarios = async () => {
+const irListaProdutos = async () => {
   
-  const url = `http://localhost:8080/users`;
+  const url = `http://localhost:8080/products`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -240,4 +181,4 @@ const irListaUsuarios = async () => {
 };
 
 definirTitulo();
-getProducts();
+getUsers();

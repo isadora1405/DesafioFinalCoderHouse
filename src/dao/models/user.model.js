@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const userSchema = new mongoose.Schema({
   first_name: { type: String, required: true },
@@ -17,6 +18,8 @@ const userSchema = new mongoose.Schema({
     default: new Date('2024-11-04T03:00:00.000Z')
   }
 });
+
+userSchema.plugin(mongoosePaginate)
 
 const User = mongoose.model("User", userSchema);
 
