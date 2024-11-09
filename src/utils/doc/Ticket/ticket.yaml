@@ -1,0 +1,74 @@
+paths:
+  /api/tickets/purchase/{cartId}:
+    post:
+      summary: Formaliza uma compra com base no ID do carrinho
+      tags:
+        - Ticket
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: cartId
+          required: true
+          schema:
+            type: string
+          description: ID do carrinho para formalizar a compra
+      responses:
+        "201":
+          description: Compra formalizada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Compra formalizada com sucesso!
+                  ticket:
+                    $ref: "#/components/schemas/Ticket"
+        "400":
+          description: Carrinho vazio ou não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Carrinho vazio ou não encontrado
+        "401":
+          description: Unauthorized - usuário não autenticado
+        "403":
+          description: Forbidden - usuário sem permissão para esta operação
+        "500":
+          description: Erro interno do servidor
+
+components:
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Valor total da compra
+        purchaser:
+          type: string
+          description: Email do usuário que fez a compra
+        cartId:
+          type: string
+          description: ID do carrinho associado à compra
+        purchaseDate:
+          type: string
+          format: date-time
+          description: Data e hora da compra
+      example:
+        amount: 250.50
+        purchaser: "joao@test.com"
+        cartId: "63e5cfd7ab83f5367e4a99d2"
+        purchaseDate: "2024-10-29T18:45:00Z"
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid

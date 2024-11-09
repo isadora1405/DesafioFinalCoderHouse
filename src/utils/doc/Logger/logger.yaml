@@ -1,0 +1,14 @@
+paths:
+  /api/loggerTest:
+    get:
+      summary: Testa todos os níveis de logs
+      tags:
+        - Logger
+      responses:
+        "200":
+          description: Mensagem de sucesso indicando que todos os níveis de log foram testados
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Testando todos os níveis de log! Verifique o console ou o arquivo de logs."

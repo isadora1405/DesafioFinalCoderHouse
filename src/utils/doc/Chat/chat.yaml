@@ -1,0 +1,84 @@
+paths:
+  /chat:
+    get:
+      summary: Renderiza a página de chat
+      tags:
+        - Chat
+      responses:
+        "200":
+          description: Página de chat renderizada com sucesso
+        "500":
+          description: Erro ao renderizar a página de chat
+
+    post:
+      summary: Salva uma mensagem no chat
+      tags:
+        - Chat
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewMessage"
+      responses:
+        "201":
+          description: Mensagem salva com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Message saved successfully."
+        "400":
+          description: Falha ao salvar a mensagem - campos obrigatórios ausentes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User email, user name, and message are required."
+        "500":
+          description: Erro ao salvar a mensagem no banco de dados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error saving message: Database connection failed"
+
+components:
+  schemas:
+    NewMessage:
+      type: object
+      properties:
+        userEmail:
+          type: string
+          description: Email do usuário que enviou a mensagem
+        userName:
+          type: string
+          description: Nome do usuário que enviou a mensagem
+        message:
+          type: string
+          description: Conteúdo da mensagem
+      required:
+        - userEmail
+        - userName
+        - message
+      example:
+        userEmail: "usuario@example.com"
+        userName: "Usuário Exemplo"
+        message: "Olá, esta é uma mensagem de teste."
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid

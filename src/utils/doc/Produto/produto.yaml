@@ -1,0 +1,212 @@
+paths:
+  /api/products:
+    get:
+      summary: Retorna uma lista de produtos com paginação
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Página dos resultados a ser exibida
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Número de produtos por página
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Ordem de classificação por preço
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filtra produtos pela categoria
+        - in: query
+          name: disponibilidade
+          schema:
+            type: string
+          description: Filtra produtos pela disponibilidade
+      responses:
+        "200":
+          description: Lista de produtos recuperada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "sucesso"
+                  payload:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+        "500":
+          description: Erro ao buscar produtos
+
+    post:
+      summary: Adiciona um novo produto
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProduct"
+      responses:
+        "201":
+          description: Produto criado com sucesso
+        "400":
+          description: Falha ao adicionar o produto
+
+  /api/products/{pid}:
+    get:
+      summary: Retorna um produto específico pelo ID
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID do produto
+      responses:
+        "200":
+          description: Produto encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Produto não encontrado
+        "400":
+          description: Erro ao buscar produto
+
+    put:
+      summary: Atualiza um produto existente
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID do produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProduct"
+      responses:
+        "200":
+          description: Produto atualizado com sucesso
+        "400":
+          description: Falha ao atualizar o produto
+
+    delete:
+      summary: Exclui um produto existente
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID do produto
+      responses:
+        "200":
+          description: Produto excluído com sucesso
+        "404":
+          description: Produto não encontrado
+        "400":
+          description: Erro ao excluir produto
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID do produto
+        title:
+          type: string
+          description: Nome do produto
+        description:
+          type: string
+          description: Descrição do produto
+        code:
+          type: string
+          description: Código do produto
+        price:
+          type: number
+          description: Preço do produto
+        category:
+          type: string
+          description: Categoria do produto
+        status:
+          type: string
+          description: Disponibilidade do produto
+      example:
+        id: "abc123"
+        title: "Produto Exemplo"
+        description: "Descrição do produto exemplo"
+        code: "PROD123"
+        price: 99.99
+        category: "Categoria Exemplo"
+        status: "disponível"
+
+    NewProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nome do produto
+        description:
+          type: string
+          description: Descrição do produto
+        code:
+          type: string
+          description: Código do produto
+        price:
+          type: number
+          description: Preço do produto
+        category:
+          type: string
+          description: Categoria do produto
+      required:
+        - title
+        - description
+        - code
+        - price
+        - category
+      example:
+        title: "Novo Produto"
+        description: "Descrição do novo produto"
+        code: "NEWPROD456"
+        price: 199.99
+        category: "Categoria Nova"
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid

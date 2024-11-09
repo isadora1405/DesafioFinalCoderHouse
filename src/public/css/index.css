@@ -1,78 +1,96 @@
 #listProducts {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
 }
 
 #productItem {
-    display: table;
-    border-collapse: collapse;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: table;
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #productItem .table-row {
-    display: table-row;
+  display: table-row;
 }
 
 #productItem .table-cell {
-    display: table-cell;
-    border: 1px solid black;
-    padding: 8px;
+  display: table-cell;
+  border: 1px solid black;
+  padding: 8px;
 }
 
 #productItem .table-header {
-    background-color: #f2f2f2;
-    font-weight: bold;
+  background-color: #f2f2f2;
+  font-weight: bold;
 }
 
 #productHeader {
-    text-align: center;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 #contentWrapper {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
 }
 
 #productForm {
-    display: grid;
-    gap: 5px;
-    text-align: left;
+  display: grid;
+  gap: 5px;
+  text-align: left;
 }
 
 #productForm label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 #productForm input[type="text"],
 #productForm input[type="number"] {
-    width: calc(100% - 20px);
-    padding: 8px;
-    font-size: 14px;
+  width: calc(100% - 20px);
+  padding: 8px;
+  font-size: 14px;
 }
 
 #productForm button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 #productForm button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
+}
+
+#logoutContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#logoutButton {
+  padding: 10px 20px;
+  background-color: #f00;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#logoutButton:hover {
+  background-color: #d00;
 }

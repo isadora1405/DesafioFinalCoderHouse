@@ -146,6 +146,10 @@ const prevPage = () => {
   getProducts(paginate.prevPage);
 };
 
+const irParaChat = () => {
+  window.location.href = "/chat";
+};
+
 const logout = async () => {
   const url = "http://localhost:8080/api/sessions/logout";
 

@@ -1,0 +1,121 @@
+paths:
+  /:
+    get:
+      summary: Retorna a página principal
+      tags:
+        - Views
+      responses:
+        "200":
+          description: Página principal renderizada com sucesso
+        "500":
+          description: Erro interno do servidor
+
+  /realTimeProducts:
+    get:
+      summary: Retorna a página de produtos em tempo real
+      tags:
+        - Views
+      responses:
+        "200":
+          description: Página de produtos em tempo real renderizada com sucesso
+        "500":
+          description: Erro interno do servidor
+
+  /products:
+    get:
+      summary: Retorna a página de produtos
+      tags:
+        - Views
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Página de produtos renderizada com sucesso
+        "401":
+          description: Unauthorized - o usuário não está autenticado
+        "500":
+          description: Erro interno do servidor
+
+  /carts/{id}:
+    get:
+      summary: Retorna a página de um carrinho específico
+      tags:
+        - Views
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID do carrinho
+      responses:
+        "200":
+          description: Página do carrinho renderizada com sucesso
+        "401":
+          description: Unauthorized - o usuário não está autenticado
+        "404":
+          description: Carrinho não encontrado
+        "500":
+          description: Erro interno do servidor
+
+  /login:
+    get:
+      summary: Retorna a página de login
+      tags:
+        - Views
+      responses:
+        "200":
+          description: Página de login renderizada
+        "500":
+          description: Erro interno do servidor
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do carrinho
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID do produto
+              quantity:
+                type: integer
+                description: Quantidade do produto no carrinho
+      example:
+        id: "634b9c4b5b6c8b00123f4567"
+        products:
+          - productId: "5f8f8f8f8f8f8f8f8f8f8f8"
+            quantity: 2
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do produto
+        name:
+          type: string
+          description: Nome do produto
+        price:
+          type: number
+          format: float
+          description: Preço do produto
+      example:
+        id: "5f8f8f8f8f8f8f8f8f8f8f8"
+        name: "Produto Exemplo"
+        price: 99.99
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: connect.sid

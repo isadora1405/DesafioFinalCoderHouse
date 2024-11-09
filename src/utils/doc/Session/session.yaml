@@ -1,0 +1,122 @@
+paths:
+  /api/sessions/register:
+    post:
+      summary: Registra um novo usuário
+      tags:
+        - Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUser"
+      responses:
+        "200":
+          description: Página de login renderizada após o registro bem-sucedido
+        "400":
+          description: Erro ao registrar usuário
+        "500":
+          description: Erro ao associar carrinho ao usuário
+
+  /api/sessions/login:
+    post:
+      summary: Realiza login de um usuário
+      tags:
+        - Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUser"
+      responses:
+        "200":
+          description: Redireciona para a página de produtos ou produtos em tempo real com base na função do usuário
+        "400":
+          description: Erro ao logar usuário ou credenciais inválidas
+
+  /api/sessions/logout:
+    get:
+      summary: Realiza logout do usuário
+      tags:
+        - Session
+      responses:
+        "200":
+          description: Redireciona para a página de login após logout bem-sucedido
+        "500":
+          description: Erro ao deslogar usuário
+
+  /api/sessions/failregister:
+    get:
+      summary: Informa falha no registro de um usuário
+      tags:
+        - Session
+      responses:
+        "200":
+          description: Falha no registro do usuário
+
+  /api/sessions/github:
+    get:
+      summary: Redireciona para autenticação via GitHub
+      tags:
+        - Session
+      responses:
+        "302":
+          description: Redirecionamento para a página de autenticação do GitHub
+
+  /api/sessions/githubcallback:
+    get:
+      summary: Callback após autenticação via GitHub
+      tags:
+        - Session
+      responses:
+        "302":
+          description: Redireciona para a página de produtos após autenticação GitHub bem-sucedida
+        "500":
+          description: Erro na autenticação via GitHub
+
+components:
+  schemas:
+    RegisterUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nome do usuário
+        last_name:
+          type: string
+          description: Sobrenome do usuário
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          description: Senha do usuário
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+      example:
+        first_name: João
+        last_name: Silva
+        email: joao@example.com
+        password: senhaSegura123
+
+    LoginUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          description: Senha do usuário
+      required:
+        - email
+        - password
+      example:
+        email: joao@example.com
+        password: senhaSegura123

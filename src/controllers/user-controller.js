@@ -1,6 +1,7 @@
 const sendEmail = require("../config/sendEmail.js");
 const User = require("../dao/models/user.model.js");
 const UserDTO = require("../dto/user.dto");
+const logger = require("./../utils/logger.js");
 
 const { factory } = require("./../dao/factory.js");
 const { userRepository } = factory();
@@ -8,24 +9,31 @@ const { userRepository } = factory();
 
 const getLoginPage = (req, res) => {
   if (req.session.user) {
+    logger.info("Usuário já logado, redirecionando para a página de produtos.");
     return res.redirect("/products");
   }
+  logger.info("Renderizando a página de login.");
   res.render("login", { style: "login.css" });
 };
 
 const getRegisterPage = (req, res) => {
   if (req.session.user) {
+    logger.info("Usuário já logado, redirecionando para a página de produtos.");
     return res.redirect("/products");
   }
+  logger.info("Renderizando a página de registro.");
   res.render("register", { style: "register.css" });
 };
 
-// Função para obter o usuário atual
 const getCurrentUser = (req, res) => {
-  if (req.user) {
-    const userDTO = new UserDTO(req.user); // Converte o usuário em um DTO
-    return res.json(userDTO); // Envia as informações necessárias
+  if (req.session.user) {
+    const userDTO = new UserDTO(req.session.user);
+    logger.info("Retornando informações do usuário logado.");
+    return res.json(userDTO);
   } else {
+    logger.warning(
+      "Tentativa de acesso a informações do usuário sem autenticação."
+    );
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
@@ -117,10 +125,6 @@ function definirOrdem(valor) {
 
   return 1;
 }
-
-module.exports = {
-  getCurrentUser,
-};
 
 module.exports = {
   getLoginPage,

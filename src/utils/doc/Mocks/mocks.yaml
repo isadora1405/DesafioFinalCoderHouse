@@ -1,0 +1,45 @@
+paths:
+  /api/mockProducts:
+    get:
+      summary: Retorna uma lista de 100 produtos mock
+      tags:
+        - Mocks
+      responses:
+        "200":
+          description: Lista de produtos mock gerada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductMock"
+        "500":
+          description: Erro interno do servidor
+
+components:
+  schemas:
+    ProductMock:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do produto mock
+        name:
+          type: string
+          description: Nome do produto mock
+        price:
+          type: number
+          format: float
+          description: Preço do produto mock
+        description:
+          type: string
+          description: Descrição do produto mock
+        category:
+          type: string
+          description: Categoria do produto mock
+      example:
+        id: "mock_12345"
+        name: "Produto Mock"
+        price: 49.99
+        description: "Descrição do produto mock."
+        category: "Eletrônicos"
