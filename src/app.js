@@ -84,8 +84,9 @@ const initializeSocket = async () => {
   try {
     listaProdutos = await Products.find();
 
-    io.on("connection", (socket) => {
+    io.on("connection", async (socket) => {
       console.log("New client connected");
+      listaProdutos = await Products.find();
       socket.emit("productItem", listaProdutos);
 
       socket.on("mensagem-chat", async (data) => {
@@ -97,8 +98,10 @@ const initializeSocket = async () => {
         }
       });
 
-      socket.on("message", (data) => {
+      socket.on("message", async (data) => {
         listaProdutos.push(data);
+
+        listaProdutos = await Products.find();
         io.emit("productItem", listaProdutos);
       });
 

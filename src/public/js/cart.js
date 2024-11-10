@@ -96,10 +96,10 @@ document
     Swal.fire({
       title: "Confirmação",
       showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Pagar",
-    cancelButtonText: "Cancelar",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Pagar",
+      cancelButtonText: "Cancelar",
       html:
         '<div style="text-align: left; margin-bottom: 10px;">' +
           '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' + totalItens + '</span><br>' +
@@ -120,7 +120,47 @@ document
           '</div>' +
         '</div>',
       allowOutsideClick: false,
-    });
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+         
+          const response = await fetch(`/api/carts/${cartId}/purchase`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ amount }),
+          });
+    
+  
+          if (response.ok) {
+            Swal.fire({
+              icon: "success",
+              title: "Compra finalizada!",
+              text: "Sua compra foi realizada com sucesso.",
+              timer: 2000,
+              showConfirmButton: false,
+            }).then(() => {
+              location.href = '/products';
+            });
+          } else {
+            const error = await response.json();
+            Swal.fire({
+              icon: "error",
+              title: "Erro!",
+              text: "Erro ao finalizar a compra: " + error.message,
+            });
+          }
+        } catch (error) {
+          console.error("Erro ao fazer a requisição:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro ao finalizar a compra.",
+          });
+        }
+      }
+    });;
     
     
 

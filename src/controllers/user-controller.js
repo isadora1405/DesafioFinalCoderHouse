@@ -95,7 +95,7 @@ const deleteInactiveUsers = async (req, res) => {
     const users = await userRepository.getAll();
     users.forEach(user => {
       if (diffInDays(user.last_accessed, new Date()) >= 2) {
-        //this.delete(user.id)
+        this.delete(user.id)
         sendEmail(true, '', user.email);
         count++;
       }  
