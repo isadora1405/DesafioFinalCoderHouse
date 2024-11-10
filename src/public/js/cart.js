@@ -94,14 +94,35 @@ document
     console.log("Total", amount)
 
     Swal.fire({
-      title: "Identificar",
+      title: "Confirmação",
+      showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Pagar",
+    cancelButtonText: "Cancelar",
       html:
-        '<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">' +
-          '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' +  totalItens +'</span>' +
-          '<span id="swal-total" style="font-size: 1.1em;">Valor Total: R$' + amount + '</span>' +
+        '<div style="text-align: left; margin-bottom: 10px;">' +
+          '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' + totalItens + '</span><br>' +
+          '<span id="swal-total" style="font-size: 1.1em;">Valor Total: R$' + amount.toFixed(2) + '</span>' +
+        '</div>' +
+        '<hr>' +
+        '<h3 style="font-size: 1.2em; text-align: left; margin-top: 10px;">Dados para pagamento (Apenas no Cartão de Crédito)</h3>' +
+        '<div style="text-align: left !important;">' +
+          '<input id="card-number" type="text" class="swal2-input" style="width: 90%, maxlength="16" placeholder="Número do Cartão">' +
+          '<input id="card-holder" type="text" class="swal2-input" style="width: 90%;" placeholder="Nome no Cartão">' +
+          '<div style="display: flex; gap: 10px; justify-content: space-between;">' +
+            '<div style="flex: 1;">' +
+              '<input id="expiry-date" type="text" class="swal2-input" style="width: 90%;" placeholder="Validade (MM/AA)">' +
+            '</div>' +
+            '<div style="flex: 1;">' +
+              '<input id="cvv" type="text" class="swal2-input" style="width: 40%;" maxlength="3" placeholder="CVV">' +
+            '</div>' +
+          '</div>' +
         '</div>',
       allowOutsideClick: false,
-    })
+    });
+    
+    
 
    /* try {
       const response = await fetch(`/api/carts/${cartId}/purchase`, {
