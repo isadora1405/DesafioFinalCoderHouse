@@ -1,7 +1,7 @@
 const socket = io();
 
 window.logout = async () => {
-  const url = "http://localhost:8080/api/sessions/logout";
+  const url = "api/sessions/logout";
 
   try {
     const response = await fetch(url, {
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     data.forEach((message) => {
       table += `<tr class="table-row">
-                <td class="table-cell">${message.id}</td>
+                <td class="table-cell">${message._id}</td>
                 <td class="table-cell">${message.title}</td>
                 <td class="table-cell">${message.description}</td>
                 <td class="table-cell">${message.code}</td>
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="table-cell">${message.thumbnail}</td>
                 <td class="table-cell">${message.stock}</td>
                 <td class="table-cell">${message.status}</td>
-                <td class="table-cell"><button onclick="deleteProduct('${message.id}')">Excluir</button></td>
+                <td class="table-cell"><button onclick="deleteProduct('${message._id}')">Excluir</button></td>
             </tr>`;
     });
 
@@ -130,3 +130,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   });
 });
+
+const irListaUsuarios = async () => {
+  
+  const url = `users`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    window.location.href = response.url;
+  } else {
+    console.error("Erro ao acessar a lista de usuários");
+  }
+};

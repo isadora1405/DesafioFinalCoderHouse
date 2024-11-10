@@ -150,16 +150,3 @@
   width: 24px;
   height: 24px;
 }
-
-#usuarioButton {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-#usuarioButton:hover {
-    background-color: #0056b3;
-}

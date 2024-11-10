@@ -151,7 +151,7 @@ const irParaChat = () => {
 };
 
 const logout = async () => {
-  const url = "http://localhost:8080/api/sessions/logout";
+  const url = "api/sessions/logout";
 
   try {
     const response = await fetch(url, {
@@ -211,7 +211,7 @@ const irParaCarrinho = async () => {
     return;
   }
 
-  const url = `http://localhost:8080/carts/${cartId}`;
+  const url = `carts/${cartId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -228,7 +228,7 @@ const irParaCarrinho = async () => {
 
 const irListaUsuarios = async () => {
   
-  const url = `http://localhost:8080/users`;
+  const url = `users`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

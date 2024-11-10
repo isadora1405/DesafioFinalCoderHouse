@@ -94,3 +94,16 @@
 #logoutButton:hover {
   background-color: #d00;
 }
+
+#usuarioButton {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#usuarioButton:hover {
+  background-color: #0056b3;
+}

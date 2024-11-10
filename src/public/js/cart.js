@@ -140,7 +140,7 @@ const buscarDados = async () => {
 };
 
 const irParaProdutos = async () => {
-  const url = "http://localhost:8080/products";
+  const url = "/products";
 
   try {
     const response = await fetch(url, {

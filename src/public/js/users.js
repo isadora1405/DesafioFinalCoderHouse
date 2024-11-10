@@ -233,8 +233,8 @@ const prevPage = () => {
   getUsers(paginate.prevPage);
 };
 
-const logout = async () => {
-  const url = "http://localhost:8080/api/sessions/logout";
+/*const logout = async () => {
+  const url = "sessions/logout";
 
   try {
     const response = await fetch(url, {
@@ -270,7 +270,7 @@ const logout = async () => {
   } catch (error) {
     console.error("Erro de rede", error);
   }
-};
+};*/
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -287,7 +287,7 @@ function definirTitulo() {
   titulo.textContent = `Bem vindo, ${getUsuarioLoagdo()}, à lista de usuários`;
 }
 
-const irParaCarrinho = async () => {
+/*const irParaCarrinho = async () => {
   const cartId = await getCartId();
   if (!cartId) {
     console.error("Erro: Cart ID não disponível");
@@ -307,12 +307,13 @@ const irParaCarrinho = async () => {
   } else {
     console.error("Erro ao acessar o carrinho");
   }
-};
+};*/
 
 const irListaProdutos = async () => {
   
-  const url = `http://localhost:8080/products`;
-  const response = await fetch(url, {
+//  const url = `http://localhost:8080/realTimeProducts`;
+const url = `realTimeProducts`;
+const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
