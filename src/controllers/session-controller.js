@@ -3,8 +3,13 @@ const { createHash } = require("../utils/utils.js");
 const passport = require("passport");
 const logger = require("../utils/logger.js");
 
+const { factory } = require("./../dao/factory");
+const { userRepository } = factory();
+
 const ADMIN_EMAIL = "adminCoder@coder.com";
 const ADMIN_PASSWORD = "adminCod3r123";
+
+
 
 const registerUser = (req, res, next) => {
   passport.authenticate("register", async (err, user, info) => {
@@ -83,7 +88,7 @@ const loginUser = (req, res, next) => {
         }
 
         user.last_accessed = new Date();
-        user.save();
+        userRepository.update(user._id, user);
         logger.info("Usuário logado com sucesso.");
         res.cookie("userName", user.first_name, { httpOnly: false });
         res.redirect(user.role === "admin" ? "/realTimeProducts" : "/products");

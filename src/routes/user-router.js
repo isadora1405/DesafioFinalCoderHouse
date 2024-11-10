@@ -10,6 +10,7 @@ router.get("/current", authMiddleware, userController.getCurrentUser);
 
 router.get("/", userController.getUser);
 router.delete("/", userController.deleteInactiveUsers);
-
+router.delete("/:pid", userController.deleteUser);
+router.put("/:pid/:prole", userController.updateRole);
 
 module.exports = router;

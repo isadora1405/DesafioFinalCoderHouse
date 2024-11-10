@@ -57,19 +57,34 @@ const getUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+}
 
+const deleteUser = async (req, res) => {
+  let { pid } = req.params;
 
-/*  try {
+  try {
+    await userRepository.delete(pid);
     
-    const dados = users.map(user => ({
-      nome: user.first_name + ' ' + user.last_name,
-      email: user.email,
-      tipo_conta: user.role
-    }));
-    res.status(200).json(users);
+    res.status(200).json("Usuário excluído com sucesso.");
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }*/
+  }
+};
+
+const updateRole = async (req, res) => {
+  let { pid, prole } = req.params;
+
+  const user = {
+    _id: pid,
+    role: prole
+  }
+  try {
+    await userRepository.update(pid, user);
+    
+    res.status(200).json("Perfil do usuário atualizado com sucesso.");
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 const deleteInactiveUsers = async (req, res) => {
@@ -100,9 +115,6 @@ const diffInDays = (date1, date2) => {
   return diffDays > 0 ? diffDays : 0; // Garantimos que não retorne um valor negativo
 }
 
-const getProduct = async (req, resp) => {
- 
-};
 
 function definirQuery(query) {
   const { category, disponibilidade }  = query;
@@ -131,5 +143,7 @@ module.exports = {
   getRegisterPage,
   getCurrentUser,
   getUser,
-  deleteInactiveUsers
+  deleteInactiveUsers,
+  deleteUser,
+  updateRole,
 };

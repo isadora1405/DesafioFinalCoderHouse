@@ -11,10 +11,10 @@ let paginate = {
 let listProducts = [];
 let cid = "";
 
-
+const api = '/api/users'
 
 const getUsers = async (page = 1) => {
-  const response = await fetch(`/api/users?limit=2&page=${page}`, {
+  const response = await fetch(`${api}?limit=2&page=${page}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const getUsers = async (page = 1) => {
             <td class="table-cell">${user.role}</td>
             <td class="table-cell">
                 <button id="cartsButton" onclick="editar('${user._id}')">Editar</button>
-                <button id="logoutButton" onclick="excluir('${user._id}')">Excluir</button>
+                <button id="logoutButton" onclick="excluir('${user._id}', '${user.first_name}')">Excluir</button>
 
             </td>
         </tr>`;
@@ -72,11 +72,157 @@ const getUsers = async (page = 1) => {
 };
 
 const editar = async (pid) => {
-  console.log("Editar aqui")
+  Swal.fire({
+    title: "Identificar",
+    html:
+      '<select id="swal-role" class="swal2-input">' +
+        '<option value="user">User</option>' +
+        '<option value="admin">Admin</option>' +
+      '</select>',
+    allowOutsideClick: false,
+  }).then(async () => {
+    const role = document.getElementById("swal-role").value;
+
+    try {
+      const response = await fetch(`${api}/${pid}/${role}`, {
+        method: "PUT",
+      });
+
+      if (response.ok) {
+        
+        Swal.fire({
+          icon: "success",
+          title: "Atualização!",
+          text: "Perfil atualizado com sucesso.",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          location.reload();
+        });
+      } else {
+        const error = await response.json();
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Erro ao atualizar: " + error.message,
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao fazer a requisição:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: "Erro ao excluir.",
+      });
+    }
+  });
+  
 };
 
-const excluir = async (pid) => {
-  console.log("Excluir aqui")
+const teste = async (pid, nome) => {
+  Swal.fire({
+    title: `Você tem certeza que deseja exclui o usuário ${nome}?`,
+    text: "Isso limpará o registro.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sim",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      popup: "swal2-custom-popup",
+      title: "swal2-custom-title",
+      cancelButton: "swal2-custom-cancel-button",
+      confirmButton: "swal2-custom-confirm-button",
+    },
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`${api}/${pid}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Excluído!",
+            text: "Usuário excluido com sucesso.",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          const error = await response.json();
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro ao excluir: " + error.message,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao fazer a requisição:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Erro ao excluir.",
+        });
+      }
+    }
+  });
+};
+
+const excluir = async (pid, nome) => {
+  Swal.fire({
+    title: `Você tem certeza que deseja exclui o usuário ${nome}?`,
+    text: "Isso limpará o registro.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sim",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      popup: "swal2-custom-popup",
+      title: "swal2-custom-title",
+      cancelButton: "swal2-custom-cancel-button",
+      confirmButton: "swal2-custom-confirm-button",
+    },
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`${api}/${pid}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Excluído!",
+            text: "Usuário excluido com sucesso.",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          const error = await response.json();
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro ao excluir: " + error.message,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao fazer a requisição:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Erro ao excluir.",
+        });
+      }
+    }
+  });
 };
 
 const nextPage = () => {

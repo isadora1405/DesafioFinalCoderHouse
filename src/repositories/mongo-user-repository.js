@@ -15,8 +15,8 @@ class MongoUserRepository extends Repository {
     return await newProduct.save();
   }
 
-  async update(id, product) {
-    return await User.findByIdAndUpdate(id, product, { new: true });
+  async update(id, user) {
+    return await User.findByIdAndUpdate(id, user, { new: true });
   }
 
   async delete(id) {
