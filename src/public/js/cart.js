@@ -90,8 +90,20 @@ document
     }
 
     const amount = calcularTotalCarrinho(); // Exemplo de valor total da compra, você pode obter isso dinamicamente
+    const totalItens = document.querySelectorAll(".cart-item").length;
+    console.log("Total", amount)
 
-    try {
+    Swal.fire({
+      title: "Identificar",
+      html:
+        '<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">' +
+          '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' +  totalItens +'</span>' +
+          '<span id="swal-total" style="font-size: 1.1em;">Valor Total: R$' + amount + '</span>' +
+        '</div>',
+      allowOutsideClick: false,
+    })
+
+   /* try {
       const response = await fetch(`/api/carts/${cartId}/purchase`, {
         method: "POST",
         headers: {
@@ -125,7 +137,7 @@ document
         title: "Erro!",
         text: "Erro ao finalizar a compra.",
       });
-    }
+    }*/
   });
 
 const buscarDados = async () => {
