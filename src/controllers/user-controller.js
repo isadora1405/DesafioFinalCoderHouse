@@ -44,7 +44,8 @@ const getUser = async (req, res) => {
   const options = {
     page: req.query.page ? parseInt(req.query.page) : 1,
     limit: req.query.limit ? parseInt(req.query.limit) : 10,
-    sort: req.query.sort ? { last_name: definirOrdem(req.query.sort) } : {} // Ordenação por preço
+    sort: req.query.sort ? { first_name: 1 } : {}, // Ordenação por preço
+    select: 'first_name last_name email age cartId role last_accessed',
   };
 
   try {
