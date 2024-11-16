@@ -27,7 +27,7 @@
     </div>
     <div class="form-info">
       <label class="form-label" for="email">Email:</label>
-      <input class="form-input" type="email" id="email" name="email" required />
+      <input class="form-input" type="email" id="email" name="email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Por favor, insira um e-mail válido. Exemplo: exemplo@dominio.com ou exemplo@dominio.com.br" />
     </div>
     <div class="form-info">
       <label class="form-label" for="password">Password:</label>
@@ -43,3 +43,5 @@
   </form>
   <a class="login-link" href="/api/user/login">Login</a>
 </div>
+
+<script src="/js/register.js"></script>

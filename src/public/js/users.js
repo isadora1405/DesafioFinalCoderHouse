@@ -73,48 +73,63 @@ const getUsers = async (page = 1) => {
 
 const editar = async (pid) => {
   Swal.fire({
-    title: "Identificar",
+    title: "Atualizar Perfil",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Atualizar",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      popup: "swal2-custom-popup",
+      title: "swal2-custom-title",
+      cancelButton: "swal2-custom-cancel-button",
+      confirmButton: "swal2-custom-confirm-button",
+    },
     html:
       '<select id="swal-role" class="swal2-input">' +
         '<option value="user">User</option>' +
         '<option value="admin">Admin</option>' +
       '</select>',
     allowOutsideClick: false,
-  }).then(async () => {
-    const role = document.getElementById("swal-role").value;
+  }).then(async (result) => {
 
-    try {
-      const response = await fetch(`${api}/${pid}/${role}`, {
-        method: "PUT",
-      });
+    if (result.isConfirmed) {
+      const role = document.getElementById("swal-role").value;
 
-      if (response.ok) {
-        
-        Swal.fire({
-          icon: "success",
-          title: "Atualização!",
-          text: "Perfil atualizado com sucesso.",
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          location.reload();
+      try {
+        const response = await fetch(`${api}/${pid}/${role}`, {
+          method: "PUT",
         });
-      } else {
-        const error = await response.json();
+
+        if (response.ok) {
+          
+          Swal.fire({
+            icon: "success",
+            title: "Atualização!",
+            text: "Perfil atualizado com sucesso.",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          const error = await response.json();
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro ao atualizar: " + error.message,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao fazer a requisição:", error);
         Swal.fire({
           icon: "error",
           title: "Erro!",
-          text: "Erro ao atualizar: " + error.message,
+          text: "Erro ao excluir.",
         });
       }
-    } catch (error) {
-      console.error("Erro ao fazer a requisição:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Erro!",
-        text: "Erro ao excluir.",
-      });
     }
+    
   });
   
 };

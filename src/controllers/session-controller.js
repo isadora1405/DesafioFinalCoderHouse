@@ -17,9 +17,10 @@ const registerUser = (req, res, next) => {
       logger.error("Erro ao registrar usuário:", err);
       return res.status(400).send("Erro ao registrar usuário");
     }
+
     if (!user) {
       logger.warning("Falha ao registrar usuário.");
-      return res.redirect("/failregister");
+      return res.status(409).send({ erro: "Email já cadastrado."});
     }
     try {
       const newCart = new Cart({});
@@ -117,6 +118,7 @@ const githubCallback = (req, res, next) => {
     { failureRedirect: "/login" },
     (err, user, info) => {
       if (err) {
+
         logger.error("Erro na autenticação GitHub:", err);
         return next(err);
       }
