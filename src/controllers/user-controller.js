@@ -64,6 +64,12 @@ const deleteUser = async (req, res) => {
   let { pid } = req.params;
 
   try {
+    const usuarioExclusao = await userRepository.getById(pid);
+
+    if (usuarioExclusao && usuarioExclusao.email === req.session.user.email) {
+      return res.status(403).json({ error: 'Você não pode excluir sua própria conta.' });
+    }
+
     await userRepository.delete(pid);
     
     res.status(200).json("Usuário excluído com sucesso.");

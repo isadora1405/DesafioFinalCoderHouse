@@ -221,19 +221,19 @@ const excluir = async (pid, nome) => {
             location.reload();
           });
         } else {
-          const error = await response.json();
+          const responseErro = await response.json();
+          console.error("Erro ao fazer a requisição:", responseErro.error);
           Swal.fire({
             icon: "error",
             title: "Erro!",
-            text: "Erro ao excluir: " + error.message,
+            text: "Erro ao excluir: " + responseErro.error,
           });
         }
-      } catch (error) {
-        console.error("Erro ao fazer a requisição:", error);
+      } catch (responseErro) {
         Swal.fire({
           icon: "error",
           title: "Erro!",
-          text: "Erro ao excluir.",
+          text: "Erro ao excluir: " + responseErro.error,
         });
       }
     }
