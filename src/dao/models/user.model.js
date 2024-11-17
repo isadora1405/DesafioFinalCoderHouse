@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
   last_accessed: { 
     type: Date, 
     default: new Date('2024-11-04T03:00:00.000Z')
-  }
+  },
+  user_name: { type: String },
 });
 
 userSchema.plugin(mongoosePaginate)

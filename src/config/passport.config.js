@@ -6,6 +6,10 @@ const local = require("passport-local");
 const { createHash, isValid } = require("../utils/utils.js");
 const env = require("./env");
 
+const { factory } = require("./../dao/factory.js");
+const { userRepository } = factory();
+
+
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
@@ -14,9 +18,12 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
+        console.log("passou aqui 3")
         try {
           const { email, age, first_name, last_name } = req.body;
           let user = await userService.findOne({ email });
+          console.log('user', user);
+          console.log("email", email);
 
           if (user) {
             return done(null, false, { message: "Email já registrado" });
@@ -57,20 +64,22 @@ const initializePassport = () => {
         callbackURL: env.GIT_CALLLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
+        console.log("passou aqui 2")
         try {
           const username =
             profile.username || profile.displayName || "defaultUsername";
 
-          let user = await userService.findOne({ username: username });
-
+          let user = await userService.findOne({  user_name: username });
+          
           if (!user) {
             let newUser = {
               first_name: profile.displayName || "User",
               last_name: "last name",
-              username: username,
-              email: profile.emails
+              user_name: username,
+              email: username + '@github.com',
+            /*  email: profile.emails
                 ? profile.emails[0].value
-                : "defaultEmail@example.com",
+                : "defaultEmail@example.com",*/
               password: "",
             };
 
@@ -100,6 +109,7 @@ const initializePassport = () => {
     new LocalStrategy(
       { usernameField: "email" },
       async (username, password, done) => {
+        console.log("passou aqui 1")
         try {
           const user = await userService.findOne({ email: username });
           if (!user) {
