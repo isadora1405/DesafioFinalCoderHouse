@@ -120,7 +120,7 @@ const githubCallback = (req, res, next) => {
   passport.authenticate(
     "github",
     { failureRedirect: "/login" },
-    (err, user, info) => {
+    async (err, user, info) => {
       if (err) {
         logger.error("Erro na autenticação GitHub:", err);
         return next(err);
@@ -130,9 +130,33 @@ const githubCallback = (req, res, next) => {
         return res.redirect("/login");
       }
 
-      req.session.user = user;
-      logger.info("Usuário autenticado com sucesso via GitHub.");
-      res.redirect("/products");
+      try {
+        if (!user.cartId) {
+          const newCart = new Cart({});
+          await newCart.save();
+
+          user.cartId = newCart._id;
+          await user.save();
+        }
+
+        req.session.user = {
+          name: user.first_name,
+          lastName: user.last_name,
+          age: user.age,
+          role: user.role || "user",
+          cartId: user.cartId,
+          email: user.email,
+        };
+
+        logger.info("Usuário autenticado com sucesso via GitHub.");
+        res.redirect("/products");
+      } catch (error) {
+        logger.error(
+          "Erro ao associar carrinho ao usuário após login GitHub:",
+          error
+        );
+        return res.status(500).send("Erro ao associar carrinho ao usuário");
+      }
     }
   )(req, res, next);
 };

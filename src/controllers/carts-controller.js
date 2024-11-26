@@ -140,14 +140,6 @@ const addNewProductToCart = async (req, res) => {
       return res.status(404).json({ error: "Produto não encontrado" });
     }
 
-    const existingProduct = cart.products.find((p) => p.productId.equals(pid));
-
-    if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      cart.products.push({ productId: pid, quantity: 1 });
-    }
-
     if (product.stock <= 0) {
       CustomError.createError({
         name: "Stock Error",
@@ -161,8 +153,21 @@ const addNewProductToCart = async (req, res) => {
       return res.status(400).json({ error: "Estoque insuficiente" });
     }
 
+    const existingProduct = cart.products.find((p) => p.productId.equals(pid));
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.products.push({ productId: pid, quantity: 1 });
+    }
+
+    product.stock -= 1;
+    await product.save();
+
     await cart.save();
-    logger.info(`Produto ${pid} adicionado ao carrinho ${cid}.`);
+    logger.info(
+      `Produto ${pid} adicionado ao carrinho ${cid}. Estoque atualizado.`
+    );
     res.json({
       message: "Produto adicionado ao carrinho com sucesso",
       payload: cart,

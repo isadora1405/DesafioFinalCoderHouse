@@ -140,6 +140,9 @@ const addCart = async (pid) => {
         timer: 3000,
         timerProgressBar: false,
       });
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
     } else {
       console.error("Erro ao adicionar produto ao carrinho");
     }
