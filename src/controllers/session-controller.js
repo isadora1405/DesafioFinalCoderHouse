@@ -2,14 +2,13 @@ const Cart = require("../dao/models/cartsModel.model.js");
 const { createHash } = require("../utils/utils.js");
 const passport = require("passport");
 const logger = require("../utils/logger.js");
+const bcrypt = require("bcrypt");
 
 const { factory } = require("./../dao/factory");
 const { userRepository } = factory();
 
 const ADMIN_EMAIL = "adminCoder@coder.com";
 const ADMIN_PASSWORD = "adminCod3r123";
-
-
 
 const registerUser = (req, res, next) => {
   passport.authenticate("register", async (err, user, info) => {
@@ -20,9 +19,15 @@ const registerUser = (req, res, next) => {
 
     if (!user) {
       logger.warning("Falha ao registrar usuário.");
-      return res.status(409).send({ erro: "Email já cadastrado."});
+      return res.status(409).send({ erro: "Email já cadastrado." });
     }
     try {
+      if (user.email === ADMIN_EMAIL) {
+        user.role = "admin";
+        user.password = await bcrypt.hash(ADMIN_PASSWORD, 10);
+      } else {
+        user.role = "user";
+      }
       const newCart = new Cart({});
       await newCart.save();
 
@@ -118,7 +123,6 @@ const githubCallback = (req, res, next) => {
     { failureRedirect: "/login" },
     (err, user, info) => {
       if (err) {
-
         logger.error("Erro na autenticação GitHub:", err);
         return next(err);
       }

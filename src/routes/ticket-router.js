@@ -11,4 +11,23 @@ router.post(
   ticketController.formalizePurchase
 );
 
+router.get(
+  "/purchase/:cartId/confirm",
+  ticketController.renderTicketConfirmation
+);
+
+router.post(
+  "/purchase/confirm",
+  authMiddleware,
+  authorizationMiddleware("user"),
+  ticketController.confirmPurchase
+);
+
+router.post(
+  "/purchase/cancel",
+  authMiddleware,
+  authorizationMiddleware("user"),
+  ticketController.cancelPurchase
+);
+
 module.exports = router;

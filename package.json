@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "cross-env NODE_ENV=dev node ./src/app.js --watch",
     "start:homol": "cross-env NODE_ENV=homol node ./src/app.js",
+    "start:prod": "cross-env NODE_ENV=prod node ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

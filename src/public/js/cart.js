@@ -89,9 +89,9 @@ document
       return;
     }
 
-    const amount = calcularTotalCarrinho(); // Exemplo de valor total da compra, você pode obter isso dinamicamente
+    const amount = calcularTotalCarrinho();
     const totalItens = document.querySelectorAll(".cart-item").length;
-    console.log("Total", amount)
+    console.log("Total", amount);
 
     Swal.fire({
       title: "Confirmação",
@@ -102,28 +102,31 @@ document
       cancelButtonText: "Cancelar",
       html:
         '<div style="text-align: left; margin-bottom: 10px;">' +
-          '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' + totalItens + '</span><br>' +
-          '<span id="swal-total" style="font-size: 1.1em;">Valor Total: R$' + amount.toFixed(2) + '</span>' +
-        '</div>' +
-        '<hr>' +
+        '<span id="swal-quantity" style="font-size: 1.1em;">Quantidade de Itens: ' +
+        totalItens +
+        "</span><br>" +
+        '<span id="swal-total" style="font-size: 1.1em;">Valor Total: R$' +
+        amount.toFixed(2) +
+        "</span>" +
+        "</div>" +
+        "<hr>" +
         '<h3 style="font-size: 1.2em; text-align: left; margin-top: 10px;">Dados para pagamento (Apenas no Cartão de Crédito)</h3>' +
         '<div style="text-align: left !important;">' +
-          '<input id="card-number" type="text" class="swal2-input" style="width: 90%, maxlength="16" placeholder="Número do Cartão">' +
-          '<input id="card-holder" type="text" class="swal2-input" style="width: 90%;" placeholder="Nome no Cartão">' +
-          '<div style="display: flex; gap: 10px; justify-content: space-between;">' +
-            '<div style="flex: 1;">' +
-              '<input id="expiry-date" type="text" class="swal2-input" style="width: 90%;" placeholder="Validade (MM/AA)">' +
-            '</div>' +
-            '<div style="flex: 1;">' +
-              '<input id="cvv" type="text" class="swal2-input" style="width: 40%;" maxlength="3" placeholder="CVV">' +
-            '</div>' +
-          '</div>' +
-        '</div>',
+        '<input id="card-number" type="text" class="swal2-input" style="width: 90%, maxlength="16" placeholder="Número do Cartão">' +
+        '<input id="card-holder" type="text" class="swal2-input" style="width: 90%;" placeholder="Nome no Cartão">' +
+        '<div style="display: flex; gap: 10px; justify-content: space-between;">' +
+        '<div style="flex: 1;">' +
+        '<input id="expiry-date" type="text" class="swal2-input" style="width: 90%;" placeholder="Validade (MM/AA)">' +
+        "</div>" +
+        '<div style="flex: 1;">' +
+        '<input id="cvv" type="text" class="swal2-input" style="width: 40%;" maxlength="3" placeholder="CVV">' +
+        "</div>" +
+        "</div>" +
+        "</div>",
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-         
           const response = await fetch(`/api/carts/${cartId}/purchase`, {
             method: "POST",
             headers: {
@@ -131,8 +134,7 @@ document
             },
             body: JSON.stringify({ amount }),
           });
-    
-  
+
           if (response.ok) {
             Swal.fire({
               icon: "success",
@@ -141,7 +143,7 @@ document
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
-              location.href = '/products';
+              location.href = "/products";
             });
           } else {
             const error = await response.json();
@@ -160,29 +162,31 @@ document
           });
         }
       }
-    });;
-    
-    
+    });
 
-   /* try {
+    /* try {
       const response = await fetch(`/api/carts/${cartId}/purchase`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount }), // Envia o valor da compra no corpo da requisição
       });
 
       if (response.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Compra finalizada!",
-          text: "Sua compra foi realizada com sucesso.",
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          window.location.reload();
-        });
+        // Após a criação do ticket, faça um fetch para obter os dados de confirmação
+        const confirmationResponse = await fetch(`/purchase/${cartId}/confirm`);
+
+        if (confirmationResponse.ok) {
+          // Você pode exibir os dados de confirmação ou redirecionar para uma nova página
+          window.location.href = `/purchase/${cartId}/confirm`; // Redireciona para a página de confirmação
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro ao carregar a confirmação da compra.",
+          });
+        }
       } else {
         const error = await response.json();
         Swal.fire({
