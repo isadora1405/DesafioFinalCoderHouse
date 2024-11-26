@@ -74,6 +74,12 @@ const getProducts = async (page = 1) => {
         <tbody>`;
 
   data.payload.forEach((product) => {
+    const isOutOfStock = product.stock <= 0;
+    const buttonDisabled = isOutOfStock ? "disabled" : "";
+    const buttonText = isOutOfStock
+      ? "Produto Indisponível"
+      : "Adicionar ao Carrinho";
+
     table += `<tr class="table-row">
             <td class="table-cell">${product._id}</td>
             <td class="table-cell">${product.title}</td>
@@ -85,7 +91,11 @@ const getProducts = async (page = 1) => {
             <td class="table-cell">${product.stock}</td>
             <td class="table-cell">${product.status}</td>
             <td class="table-cell">
-                <button onclick="addCart('${product._id}')">Adicionar ao Carrinho</button>
+                <button 
+                    onclick="addCart('${product._id}')" 
+                    ${buttonDisabled}>
+                    ${buttonText}
+                </button>
             </td>
         </tr>`;
   });
@@ -227,7 +237,6 @@ const irParaCarrinho = async () => {
 };
 
 const irListaUsuarios = async () => {
-  
   const url = `users`;
   const response = await fetch(url, {
     method: "GET",

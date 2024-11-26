@@ -35,7 +35,6 @@ const registerUser = (req, res, next) => {
       await user.save();
 
       logger.info("Usuário registrado com sucesso.");
-      res.render("login", { style: "login.css" });
     } catch (error) {
       logger.error("Erro ao associar carrinho ao usuário:", error);
       return res.status(500).send("Erro ao associar carrinho ao usuário");
