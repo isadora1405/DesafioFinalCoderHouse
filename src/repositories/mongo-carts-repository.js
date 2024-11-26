@@ -1,4 +1,4 @@
-const Carts = require('../dao/models/cartsModel.model.js'); // Supondo que você tenha um modelo de carrinho
+const Carts = require("../dao/models/cartsModel.model.js");
 
 class MongoCartsRepository {
   async getAll() {
@@ -6,9 +6,7 @@ class MongoCartsRepository {
   }
 
   async getById(id) {
-    return await Carts.findById(id).populate(
-      "products.productId"
-    );
+    return await Carts.findById(id).populate("products.productId");
   }
 
   async create(cartDTO) {
@@ -22,6 +20,10 @@ class MongoCartsRepository {
 
   async delete(id) {
     return await Carts.deleteOne({ _id: id });
+  }
+
+  async clearCartProducts(id) {
+    return await Carts.updateOne({ _id: id }, { $set: { products: [] } });
   }
 }
 

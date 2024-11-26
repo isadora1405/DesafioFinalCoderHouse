@@ -2,6 +2,7 @@ const Carts = require("../dao/models/cartsModel.model");
 const Products = require("./../dao/models/productsModel.model");
 const TicketService = require("./../services/ticketService.js");
 const CustomError = require("../services/errors/customErrors.js");
+const EErrors = require("./../services/errors/enums.js");
 const {
   generateCartNotFoundErrorInfo,
   generateProductNotFoundErrorInfo,
@@ -59,22 +60,22 @@ const addNewCart = async (req, res) => {
 
 const deleteAllProductsFromCart = async (req, res) => {
   try {
-    const result = await cartsRepository.delete(req.params.cid);
-    if (!result.deletedCount) {
-      logger.warning(
-        `Carrinho ${req.params.cid} não encontrado para exclusão.`
-      );
+    const result = await cartsRepository.clearCartProducts(req.params.cid);
+    if (!result.modifiedCount) {
+      logger.warning(`Carrinho ${req.params.cid} não encontrado para limpeza.`);
       return res
         .status(404)
         .json({ success: false, msg: "Carrinho não encontrado" });
     }
-    logger.info(`Produtos excluídos do carrinho ${req.params.cid}.`);
-    res.status(200).json({ success: true });
+    logger.info(`Produtos removidos do carrinho ${req.params.cid}.`);
+    res
+      .status(200)
+      .json({ success: true, msg: "Produtos removidos do carrinho." });
   } catch (error) {
     logger.error(
-      `Erro ao excluir produtos do carrinho ${req.params.cid}: ${error.message}`
+      `Erro ao remover produtos do carrinho ${req.params.cid}: ${error.message}`
     );
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -139,12 +140,10 @@ const addNewProductToCart = async (req, res) => {
       return res.status(404).json({ error: "Produto não encontrado" });
     }
 
-    const existingProductIndex = cart.products.findIndex(
-      (p) => p.productId.toString() === pid
-    );
+    const existingProduct = cart.products.find((p) => p.productId.equals(pid));
 
-    if (existingProductIndex !== -1) {
-      cart.products[existingProductIndex].quantity += 1;
+    if (existingProduct) {
+      existingProduct.quantity += 1;
     } else {
       cart.products.push({ productId: pid, quantity: 1 });
     }
