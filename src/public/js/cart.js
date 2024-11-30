@@ -91,9 +91,24 @@ document
 
     const amount = calcularTotalCarrinho();
     const totalItens = document.querySelectorAll(".cart-item").length;
-    console.log("Total", amount);
+    
+    const response = await fetch(`/api/carts/${cartId}/purchase`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount }),
+    });
 
-    Swal.fire({
+    if (response.ok) {
+      location.href = '/tickets'
+
+    }
+
+    console.log("Response", response)
+
+
+    /*Swal.fire({
       title: "Confirmação",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -162,7 +177,7 @@ document
           });
         }
       }
-    });
+    });*/
 
     /* try {
       const response = await fetch(`/api/carts/${cartId}/purchase`, {

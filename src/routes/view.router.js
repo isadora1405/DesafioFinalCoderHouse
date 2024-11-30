@@ -14,6 +14,11 @@ router.get("/realTimeProducts", (req, res) => {
 router.get("/products", authMiddleware, (req, res) =>
   res.render("products", { style: "products.css" })
 );
+
+router.get("/tickets", authMiddleware, (req, res) =>
+  res.render("ticket", { style: "ticket.css" })
+);
+
 router.get("/carts/:id", authMiddleware, async (req, res) => {
   try {
     const cart = await Carts.findById(req.params.id).populate(

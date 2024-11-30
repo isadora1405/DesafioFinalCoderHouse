@@ -71,6 +71,7 @@ app.use("/realTimeProducts", routesView);
 app.use("/products", routesView);
 app.use("/carts", routesView);
 app.use("/users", routesView);
+app.use("/tickets", routesView);
 app.use("/api", loggerTestRoute);
 
 app.use(express.static(__dirname + "/public"));
