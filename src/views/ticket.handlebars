@@ -7,18 +7,22 @@
   <h3>Produtos</h3>
   <ul>
     {{#each ticket.products}}
-      <li>{{this.name}}
+      <li>{{this.productId.title}}
         - Quantidade:
         {{this.quantity}}
         - Preço: R$
-        {{this.price}}</li>
+        {{this.productId.price}}</li>
     {{/each}}
   </ul>
 
-  <form action="/api/purchase/confirm" method="POST">
+  <form
+    id="confirm-purchase-form"
+    action="/api/tickets/purchase/{{ticket.cartId}}"
+    method="POST"
+  >
     <input type="hidden" name="ticketId" value="{{ticket._id}}" />
     <input type="hidden" name="cartId" value="{{cartId}}" />
-    <button type="submit">Confirmar Compra</button>
+    <button type="submit" id="confirm-purchase-btn">Confirmar Compra</button>
   </form>
 
   <form action="/api/purchase/cancel" method="POST">

@@ -21,7 +21,7 @@ window.logout = async () => {
         timer: 3000,
         timerProgressBar: false,
       }).then(() => {
-        window.location.href = response.url; // Redirecionar para a página de login após logout
+        window.location.href = response.url;
       });
     } else {
       Swal.fire({

@@ -9,6 +9,7 @@ const formalizePurchase = async (req, res) => {
   try {
     const userEmail = req.session.user.email;
     const cart = await cartsRepository.getById(req.params.cartId);
+
     if (!cart || cart.products.length === 0) {
       logger.warning("Tentativa de formalizar compra com carrinho vazio.");
       return res
@@ -21,20 +22,17 @@ const formalizePurchase = async (req, res) => {
       0
     );
 
-    const ticketData = {
+    const ticketPreview = {
       amount: totalAmount,
       purchaser: userEmail,
       cartId: req.params.cartId,
+      products: cart.products,
     };
 
-    const newTicket = await ticketRepository.createTicket(ticketData);
-    const ticketDTO = new TicketDTO(newTicket);
+    logger.info("Compra formalizada e ticket criado temporariamente.");
 
-    logger.info("Compra formalizada com sucesso.");
-
-    // Renderiza o ticket para confirmação
-    res.render("ticket-confirmation", {
-      ticket: ticketDTO,
+    res.render("ticket", {
+      ticket: ticketPreview,
       cartId: req.params.cartId,
       style: "ticket.css",
     });
@@ -46,24 +44,6 @@ const formalizePurchase = async (req, res) => {
   }
 };
 
-// Função para confirmar a compra
-const confirmPurchase = async (req, res) => {
-  try {
-    const { ticketId, cartId } = req.body;
-
-    await cartsRepository.clearCart(cartId);
-    logger.info("Compra confirmada.");
-
-    return res.status(200).json({ message: "Compra confirmada com sucesso!" });
-  } catch (error) {
-    logger.error("Erro ao confirmar a compra:", error);
-    return res
-      .status(500)
-      .json({ message: "Erro ao confirmar a compra", error: error.message });
-  }
-};
-
-// Função para cancelar a compra e devolver os produtos ao estoque
 const cancelPurchase = async (req, res) => {
   try {
     const { cartId } = req.body;
@@ -91,32 +71,51 @@ const cancelPurchase = async (req, res) => {
 const renderTicketConfirmation = async (req, res) => {
   try {
     const cartId = req.params.cartId;
-    const ticket = await ticketRepository.getTicketByCartId(cartId); // Obtenha o ticket associado ao carrinho
 
-    if (!ticket) {
-      return res.status(404).json({ message: "Ticket não encontrado" });
+    const cart = await cartsRepository.getById(cartId);
+    console.log(cart);
+    if (!cart || cart.products.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Carrinho vazio ou não encontrado" });
     }
 
-    // Renderiza a página com os detalhes do ticket
-    res.render("ticket-confirmation", {
-      ticket: ticket,
+    const totalAmount = cart.products.reduce(
+      (acc, item) => acc + item.productId.price * item.quantity,
+      0
+    );
+
+    const ticketPreview = {
+      code: `PREVIEW-${Date.now()}`,
+      amount: totalAmount,
+      purchaser: req.session.user.email,
+      cartId: cartId,
+      purchase_datetime: new Date(),
+      items: cart.products.map((item) => ({
+        name: item.productId.title,
+        price: item.productId.price,
+        quantity: item.quantity,
+      })),
+    };
+
+    console.log(ticketPreview);
+
+    res.render("ticket", {
+      ticket: ticketPreview,
       cartId: cartId,
       style: "ticket.css",
     });
   } catch (error) {
-    console.error("Erro ao renderizar a confirmação do ticket:", error);
-    res
-      .status(500)
-      .json({
-        message: "Erro ao renderizar o ticket de confirmação",
-        error: error.message,
-      });
+    logger.error("Erro ao renderizar o ticket de confirmação:", error);
+    res.status(500).json({
+      message: "Erro ao renderizar o ticket de confirmação",
+      error: error.message,
+    });
   }
 };
 
 module.exports = {
   formalizePurchase,
-  confirmPurchase,
   cancelPurchase,
   renderTicketConfirmation,
 };

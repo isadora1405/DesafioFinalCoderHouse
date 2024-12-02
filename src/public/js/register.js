@@ -1,11 +1,11 @@
 document
   .querySelector(".register-form")
   .addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevenir o comportamento padrão
+    event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries()); // Converte os dados do formulário em objeto
+    const data = Object.fromEntries(formData.entries());
 
     try {
       console.log("Endpoint", form.action);
@@ -29,7 +29,6 @@ document
       } else {
         const error = await response.json();
         let mensagem = "Erro ao cadastrar usuário";
-        //    console.log("Error", erro)
         if (response.status === 409) {
           mensagem = "Email já cadastrado para outra conta.";
         }

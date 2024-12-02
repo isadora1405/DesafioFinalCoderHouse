@@ -1,6 +1,15 @@
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 
+const productSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  quantity: Number,
+});
+
 const ticketSchema = new mongoose.Schema({
   code: {
     type: String,
@@ -19,6 +28,15 @@ const ticketSchema = new mongoose.Schema({
   },
   purchaser: {
     type: String,
+    required: true,
+  },
+  cartId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Cart",
+    required: true,
+  },
+  products: {
+    type: [productSchema],
     required: true,
   },
 });

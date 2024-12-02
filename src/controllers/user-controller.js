@@ -6,7 +6,6 @@ const logger = require("./../utils/logger.js");
 const { factory } = require("./../dao/factory.js");
 const { userRepository } = factory();
 
-
 const getLoginPage = (req, res) => {
   if (req.session.user) {
     logger.info("Usuário já logado, redirecionando para a página de produtos.");
@@ -44,13 +43,13 @@ const getUser = async (req, res) => {
   const options = {
     page: req.query.page ? parseInt(req.query.page) : 1,
     limit: req.query.limit ? parseInt(req.query.limit) : 10,
-    sort: req.query.sort ? { first_name: 1 } : {}, // Ordenação por preço
-    select: 'first_name last_name email age cartId role last_accessed',
+    sort: req.query.sort ? { first_name: 1 } : {},
+    select: "first_name last_name email age cartId role last_accessed",
   };
 
   try {
     const users = await userRepository.paginate(query, options);
-    
+
     users.payload = users.docs;
     delete users.docs;
 
@@ -58,7 +57,7 @@ const getUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 const deleteUser = async (req, res) => {
   let { pid } = req.params;
@@ -67,11 +66,13 @@ const deleteUser = async (req, res) => {
     const usuarioExclusao = await userRepository.getById(pid);
 
     if (usuarioExclusao && usuarioExclusao.email === req.session.user.email) {
-      return res.status(403).json({ error: 'Você não pode excluir sua própria conta.' });
+      return res
+        .status(403)
+        .json({ error: "Você não pode excluir sua própria conta." });
     }
 
     await userRepository.delete(pid);
-    
+
     res.status(200).json("Usuário excluído com sucesso.");
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -83,11 +84,11 @@ const updateRole = async (req, res) => {
 
   const user = {
     _id: pid,
-    role: prole
-  }
+    role: prole,
+  };
   try {
     await userRepository.update(pid, user);
-    
+
     res.status(200).json("Perfil do usuário atualizado com sucesso.");
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -95,17 +96,15 @@ const updateRole = async (req, res) => {
 };
 
 const deleteInactiveUsers = async (req, res) => {
-  
   try {
-
     let count = 0;
     const users = await userRepository.getAll();
-    users.forEach(user => {
+    users.forEach((user) => {
       if (diffInDays(user.last_accessed, new Date()) >= 2) {
-        this.delete(user.id)
-        sendEmail(true, '', user.email);
+        this.delete(user.id);
+        sendEmail(true, "", user.email);
         count++;
-      }  
+      }
     });
 
     res.status(200).json(`${count} usuário(s) excluído(s)`);
@@ -115,21 +114,18 @@ const deleteInactiveUsers = async (req, res) => {
 };
 
 const diffInDays = (date1, date2) => {
-  // Convertemos as datas em milissegundos
   const timeDiff = Math.abs(date2 - date1);
-  // Dividimos pela quantidade de milissegundos em um dia e subtraímos 2
   const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) - 2;
-  return diffDays > 0 ? diffDays : 0; // Garantimos que não retorne um valor negativo
-}
-
+  return diffDays > 0 ? diffDays : 0;
+};
 
 function definirQuery(query) {
-  const { category, disponibilidade }  = query;
+  const { category, disponibilidade } = query;
   let dados = {};
   if (category) {
-    dados.category = category
+    dados.category = category;
   }
-  
+
   if (disponibilidade) {
     dados.status = disponibilidade;
   }
@@ -138,7 +134,7 @@ function definirQuery(query) {
 }
 
 function definirOrdem(valor) {
-  if (valor === 'desc') {
+  if (valor === "desc") {
     return -1;
   }
 

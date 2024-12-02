@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("./../middleware/auth-middleware.js");
 const Carts = require("../dao/models/cartsModel.model");
+const Ticket = require("../dao/models/ticketModel.model.js");
 
 router.get("/", (req, res) => {
   res.render("home", { style: "index.css" });
@@ -15,9 +16,24 @@ router.get("/products", authMiddleware, (req, res) =>
   res.render("products", { style: "products.css" })
 );
 
-router.get("/tickets", authMiddleware, (req, res) =>
-  res.render("ticket", { style: "ticket.css" })
-);
+router.get("/ticket/:ticketId", authMiddleware, async (req, res) => {
+  try {
+    const ticketId = req.params.ticketId;
+
+    const ticket = await Ticket.findById(ticketId).populate(
+      "products.productId"
+    );
+    if (!ticket) {
+      return res.status(404).send("Ticket não encontrado.");
+    }
+
+    const ticketObject = ticket.toObject();
+
+    res.render("ticket", { ticket: ticketObject, style: "ticket.css" });
+  } catch (error) {
+    res.status(500).send("Erro ao processar a compra.");
+  }
+});
 
 router.get("/carts/:id", authMiddleware, async (req, res) => {
   try {
