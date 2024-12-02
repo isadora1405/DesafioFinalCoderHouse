@@ -1,10 +1,10 @@
 const calcularTotalCarrinho = () => {
-  const items = document.querySelectorAll(".cart-item"); // Classe dos itens no carrinho
+  const items = document.querySelectorAll(".cart-item");
   let total = 0;
 
   items.forEach((item) => {
-    const price = parseFloat(item.getAttribute("data-price")); // Atributo com o preço
-    const quantity = parseInt(item.getAttribute("data-quantity")); // Atributo com a quantidade
+    const price = parseFloat(item.getAttribute("data-price"));
+    const quantity = parseInt(item.getAttribute("data-quantity"));
     total += price * quantity;
   });
 
@@ -91,7 +91,7 @@ document
 
     const amount = calcularTotalCarrinho();
     const totalItens = document.querySelectorAll(".cart-item").length;
-    
+
     const response = await fetch(`/api/carts/${cartId}/purchase`, {
       method: "POST",
       headers: {
@@ -101,12 +101,15 @@ document
     });
 
     if (response.ok) {
-      location.href = '/tickets'
+      const data = await response.json();
+      const ticketId = data.ticketId;
 
+      if (ticketId) {
+        location.href = `/ticket/${ticketId}`;
+      }
     }
 
-    console.log("Response", response)
-
+    console.log("Response", response);
 
     /*Swal.fire({
       title: "Confirmação",
@@ -185,16 +188,14 @@ document
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount }), // Envia o valor da compra no corpo da requisição
+        body: JSON.stringify({ amount }),
       });
 
       if (response.ok) {
-        // Após a criação do ticket, faça um fetch para obter os dados de confirmação
         const confirmationResponse = await fetch(`/purchase/${cartId}/confirm`);
 
         if (confirmationResponse.ok) {
-          // Você pode exibir os dados de confirmação ou redirecionar para uma nova página
-          window.location.href = `/purchase/${cartId}/confirm`; // Redireciona para a página de confirmação
+          window.location.href = `/purchase/${cartId}/confirm`;
         } else {
           Swal.fire({
             icon: "error",
@@ -241,7 +242,7 @@ const irParaProdutos = async () => {
         "Content-Type": "application/json",
       },
     });
-    window.location.href = response.url; // Redirecionar para a página de login após logout
+    window.location.href = response.url;
   } catch (error) {
     console.error("Erro de rede", error);
   }

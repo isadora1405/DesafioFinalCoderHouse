@@ -13,14 +13,9 @@ router.post(
 
 router.get(
   "/purchase/:cartId/confirm",
-  ticketController.renderTicketConfirmation
-);
-
-router.post(
-  "/purchase/confirm",
   authMiddleware,
   authorizationMiddleware("user"),
-  ticketController.confirmPurchase
+  ticketController.renderTicketConfirmation
 );
 
 router.post(

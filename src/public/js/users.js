@@ -11,7 +11,7 @@ let paginate = {
 let listProducts = [];
 let cid = "";
 
-const api = '/api/users'
+const api = "/api/users";
 
 const getUsers = async (page = 1) => {
   const response = await fetch(`${api}?limit=2&page=${page}`, {
@@ -87,12 +87,11 @@ const editar = async (pid) => {
     },
     html:
       '<select id="swal-role" class="swal2-input">' +
-        '<option value="user">User</option>' +
-        '<option value="admin">Admin</option>' +
-      '</select>',
+      '<option value="user">User</option>' +
+      '<option value="admin">Admin</option>' +
+      "</select>",
     allowOutsideClick: false,
   }).then(async (result) => {
-
     if (result.isConfirmed) {
       const role = document.getElementById("swal-role").value;
 
@@ -102,7 +101,6 @@ const editar = async (pid) => {
         });
 
         if (response.ok) {
-          
           Swal.fire({
             icon: "success",
             title: "Atualização!",
@@ -129,9 +127,7 @@ const editar = async (pid) => {
         });
       }
     }
-    
   });
-  
 };
 
 const teste = async (pid, nome) => {
@@ -269,7 +265,7 @@ const prevPage = () => {
         timer: 3000,
         timerProgressBar: false,
       }).then(() => {
-        window.location.href = response.url; // Redirecionar para a página de login após logout
+        window.location.href = response.url;
       });
     } else {
       Swal.fire({
@@ -325,10 +321,8 @@ function definirTitulo() {
 };*/
 
 const irListaProdutos = async () => {
-  
-//  const url = `http://localhost:8080/realTimeProducts`;
-const url = `realTimeProducts`;
-const response = await fetch(url, {
+  const url = `realTimeProducts`;
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

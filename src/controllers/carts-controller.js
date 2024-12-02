@@ -307,6 +307,7 @@ const finalizePurchase = async (req, res) => {
         amount: totalAmount,
         purchaser: req.session.user.email,
         cartId: cid,
+        products: cart.products,
       };
       const response = await ticketRepository.createTicket(ticketData);
 
@@ -317,10 +318,7 @@ const finalizePurchase = async (req, res) => {
         await cartsRepository.update(cart._id, { products: cart.products });
 
         logger.info("Compra concluída com sucesso.");
-        return res.json({
-          message: "Compra concluída com sucesso",
-          unavailableProducts,
-        });
+        return res.json({ ticketId: response._id });
       } else {
         logger.error("Erro ao criar o ticket.");
         return res.status(500).json({ message: "Erro ao criar o ticket" });
